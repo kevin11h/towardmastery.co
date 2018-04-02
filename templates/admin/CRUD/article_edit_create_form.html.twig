@@ -1,0 +1,129 @@
+
+{{ form_start(form, {'action': app.request.uri, 'method': 'POST'}) }}
+
+  <div class="form-group">
+  {{ form_label(form.category) }}
+  {{ form_errors(form.category) }}
+  {{ form_widget(form.category, {'attr': {'class':'form-control'}}) }}
+  </div>
+
+  <div class="form-group">
+  {{ form_label(form.date) }}
+  {{ form_errors(form.date) }}
+  {{ form_widget(form.date, {'attr': {'class':'form-control'}}) }}
+  </div>
+
+
+
+  <ul class="nav nav-tabs" id="article-tabs" role="tablist">
+    {% for translation in form.translations %}
+    {% if translation.vars.value.language == 'en'%}
+    <li class="nav-item">
+      <a class="nav-link active" id="english-tab" data-toggle="tab" href="#english" role="tab" aria-controls="english" aria-selected="true">English</a>
+    </li>
+    {% elseif translation.vars.value.language == 'fr' %}
+    <li class="nav-item">
+      <a class="nav-link" id="french-tab" data-toggle="tab" href="#french" role="tab" aria-controls="french" aria-selected="true">French</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+
+
+
+  <div class="tab-content" id="article-tabs-content">
+    {% for translation in form.translations %}
+
+    {% if translation.id is defined %}
+    {{ form_row(translation.id) }}
+    {% endif %}
+
+    {% if translation.vars.value.language == 'en'%}
+    <div class="tab-pane fade show active" id="english" role="tabpanel" aria-labelledby="english-tab">
+
+      <div class="form-group">
+      {{ form_label(translation.title) }}
+      {{ form_errors(translation.title) }}
+      {{ form_widget(translation.title, {'attr': {'class':'form-control'}}) }}
+      </div>
+
+      <div class="form-group">
+      {{ form_label(translation.subtitle) }}
+      {{ form_errors(translation.subtitle) }}
+      {{ form_widget(translation.subtitle, {'attr': {'class':'form-control'}}) }}
+      </div>
+
+      <div class="form-group">
+      {{ form_label(translation.description) }}
+      {{ form_errors(translation.description) }}
+      {{ form_widget(translation.description, {'attr': {'class':'form-control'}}) }}
+      </div>
+
+      {{ form_row(translation.language, {'attr': {'value':'en'}}) }}
+
+      <div class="form-group">
+      {{ form_label(translation.content) }}
+      {{ form_errors(translation.content) }}
+      {{ form_widget(translation.content, {'attr': {'class':'form-control'}}) }}
+      </div>
+
+    </div>
+    {% elseif translation.vars.value.language == 'fr' %}
+    <div class="tab-pane fade show" id="french" role="tabpanel" aria-labelledby="french-tab">
+
+      <div class="form-group">
+      {{ form_label(translation.title) }}
+      {{ form_errors(translation.title) }}
+      {{ form_widget(translation.title, {'attr': {'class':'form-control'}}) }}
+      </div>
+
+      <div class="form-group">
+      {{ form_label(translation.subtitle) }}
+      {{ form_errors(translation.subtitle) }}
+      {{ form_widget(translation.subtitle, {'attr': {'class':'form-control'}}) }}
+      </div>
+
+      <div class="form-group">
+      {{ form_label(translation.description) }}
+      {{ form_errors(translation.description) }}
+      {{ form_widget(translation.description, {'attr': {'class':'form-control'}}) }}
+      </div>
+
+      {{ form_row(translation.language, {'attr': {'value':'fr'}}) }}
+
+      <div class="form-group">
+      {{ form_label(translation.content) }}
+      {{ form_errors(translation.content) }}
+      {{ form_widget(translation.content, {'attr': {'class':'form-control'}}) }}
+      </div>
+
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+
+  <div class="form-group">
+  {{ form_label(form.avatar) }}
+  {{ form_errors(form.avatar) }}
+  {{ form_widget(form.avatar, {'attr': {'class':'form-control'}}) }}
+  {% if article.avatar is not null %}
+  {% if (article.avatar.fileName)|length > 0 %}<p>Uploaded : </p><img class="thumbnail" src="{{asset(article_img_directory ~ article.avatar.fileName)}}">{% endif %}
+  {% endif %}
+  </div>
+  <div class="form-group">
+  {{ form_label(form.cover) }}
+  {{ form_errors(form.cover) }}
+  {{ form_widget(form.cover, {'attr': {'class':'form-control'}}) }}
+  {% if article.avatar is not null %}
+  {% if (article.cover.fileName)|length > 0 %}<p>Uploaded : </p><img class="thumbnail" src="{{asset(article_img_directory ~ article.cover.fileName)}}">{% endif %}
+  {% endif %}
+  </div>
+  <div class="form-group">
+  {{ form_label(form.status) }}
+  {{ form_errors(form.status) }}
+  {{ form_widget(form.status, {'attr': {'class':'form-control'}}) }}
+  </div>
+
+
+{{ form_end(form) }}

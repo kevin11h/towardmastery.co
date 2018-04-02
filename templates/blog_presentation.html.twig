@@ -1,0 +1,12 @@
+<div id="blog-presentation" class="card">
+  <div class="card-body">
+    <p class="card-text">{{ 'about-presentation'|trans|raw }}</p>
+    <p class="card-text text-center"><a href="http://basilesamel.com" target="_blank" class="btn btn-secondary">{{ 'about-about'|trans|raw }}</a></p>
+    <p class="card-text">{{ 'about-contact'|trans|raw }} : &nbsp;
+        <a href="mailto:basunako@gmail.com" target="_blank"><span class="fa fa-envelope"></span></a>&nbsp;
+        <a href="https://www.quora.com/profile/Basile-Samel" target="_blank"><span class="fab fa-quora"></span></a>&nbsp;
+        <a href="https://twitter.com/basilesamel" target="_blank"><span class="fab fa-twitter"></span></a>
+    </p>
+    {% include 'email_subscription.html.twig' %}
+  </div>
+</div>

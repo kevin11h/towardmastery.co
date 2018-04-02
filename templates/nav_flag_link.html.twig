@@ -1,0 +1,21 @@
+{% set lang = app.request.locale %}
+{% set other_lang = (lang == 'en' ? 'fr' : 'en') %}
+
+{% if article is defined %}
+{% set other_slug = (lang == 'en' ? article.french.slug : article.english.slug ) %}
+<a class="nav-link" href="{{path('article_view_page', {'_locale': other_lang, 'slug': other_slug})}}">
+    {% if other_lang == 'fr' %}
+        <img src="{{asset('img/french_flag_icon.png')}}">
+    {% else %}
+        <img src="{{asset('img/english_flag_icon.png')}}">
+    {% endif %}
+</a>
+{% else %}
+<a class="nav-link" href="{{path('landing_page', {'_locale': other_lang})}}">
+    {% if other_lang == 'fr' %}
+        <img src="{{asset('img/french_flag_icon.png')}}">
+    {% else %}
+        <img src="{{asset('img/english_flag_icon.png')}}">
+    {% endif %}
+</a>
+{% endif %}

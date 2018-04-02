@@ -1,0 +1,21 @@
+<article class="article mx-auto">
+  <div class="row">
+  <header class="col-12">
+  <img src="{{asset(article_img_directory ~ article.cover)}}" class="article-cover">
+  <h1>{{article.english.title}}</h1>
+  </header>
+  </div>
+
+  <div class="row">
+  <div class="p-4 col-12 col-md-6 offset-md-3">
+  <h2>{{article.english.subtitle}}</h2>
+  <p class="article-metadata"><small>{{article.date | date("F d")}}</small></p>
+  <p class="tags">
+  {% for tag in article.english.tags %}
+  <span class="badge badge-primary badge-pill tag">{{tag.title}}</span>
+  {% endfor %}
+  </p>
+  <div class="article-content">{{article.english.content | raw}}</div>
+  </div>
+  </div>
+</article>

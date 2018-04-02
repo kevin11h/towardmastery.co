@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% trans_default_domain 'messages' %}
+{% set lang = app.request.locale %}
+{% set other_lang = (lang == 'en' ? 'fr' : 'en') %}
+
+{%block body%}
+
+
+<main class="container-fluid">
+{% include 'nav.html.twig' %}
+
+<div class="row mt-3">
+
+<div class="col-md-3" id="toolbar">
+
+{% include 'blog_presentation.html.twig' %}
+{#% include 'toolbar_search_form.html.twig' %#}
+
+</div>
+
+<!-- Article feed -->
+<div class="col-12 col-md-8" id="articles">
+{% if articles is not empty %}
+  {% include 'CRUD/article_list.html.twig' %}
+{% else %}
+  <p class="text-center display-4 text-muted">{{ 'article-noarticles'|trans|raw }}</p>
+{% endif %}
+
+</div>
+
+</div>
+</main>
+
+{%endblock%}
+
+{%block javascript%}
+<script src="{{ asset('build/landing.js') }}"></script>
+{%endblock%}

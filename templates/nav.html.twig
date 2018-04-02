@@ -1,0 +1,16 @@
+<nav class="navbar navbar-toggleable-sm navbar-light bg-light">
+    <div class="navbar-brand">
+
+      <a href="/{{ app.request.locale }}"><div class="logo-wrapper">
+          <img src="{{asset('img/logo_merged.svg')}}"/>
+          <p class="logo">Toward Mastery</p>
+      </div></a>
+    </div>
+
+    <ul class="navbar-nav ml-auto">
+        {#% include 'side_toolbar_button.html.twig' %#}
+        {% include 'nav_flag_link.html.twig' %}
+    </ul>
+</nav>
+
+{% include 'side_toolbar.html.twig' %}

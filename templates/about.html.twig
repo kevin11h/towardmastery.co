@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}About | Engineer Leaf{% endblock %}
+
+{%block body%}
+
+<main class="container-fluid">
+
+{% include 'nav.html.twig' %}
+
+<div class="row">
+
+<!-- Article feed -->
+<div class="p-4 col-12 col-md-6 offset-md-3" id="about">
+
+  <h2>Purpose</h2>
+  <p>This space is a laboratory for people to grow together.</p>
+  <p>I use my articles as retrospective materials to constantly improve my craftsmanship. I write them to provide something valuable. Food for thought,  debates and exchanges.</p>
+  <p>The redaction is originally done in french. I then translate the articles to reach more people and practice my language skills.</p>
+
+</div>
+
+</div>
+
+<footer class="row" id="footer_article">
+<div class="col-12">
+<hr>
+<img src="{{asset('assets/img/logo_engineerleaf.svg')}}"/>
+
+</div>
+</footer>
+
+</main>
+
+{%endblock%}
+
+{%block javascript%}
+<script src="{{ asset('build/article.js') }}"></script>
+{%endblock%}

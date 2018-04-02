@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+
+    <title>{% block title %}Olorin{% endblock %}</title>
+
+        {%block stylesheet%}
+        <link rel="stylesheet" href="{{ asset("build/olorin_admin.css") }}">
+        {%endblock%}
+
+    <link href="https://fonts.googleapis.com/css?family=Suez+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=IM+Fell+English" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Averia+Serif+Libre" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/font-awesome/css/font-awesome.min.css') }}">
+</head>
+<body>
+
+  {% include 'admin/nav.html.twig' %}
+
+  {%block body%} {%endblock%}
+
+
+  {%block javascript%}
+  <script src="{{ asset('build/olorin_admin.js') }}"></script>
+  {%endblock%}
+
+</body>
+</html>

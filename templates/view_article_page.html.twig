@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{article.english.title}} | Engineer Leaf{% endblock %}
+
+{%block body%}
+
+<main class="container-fluid">
+
+{% include 'nav.html.twig' %}
+
+<div class="row">
+
+<!-- Article feed -->
+<div class="col-12" id="article">
+
+{% include 'CRUD/article.html.twig' %}
+
+</div>
+
+</div>
+
+<footer class="row" id="footer_article">
+<div class="col-12">
+<hr>
+<img src="{{asset('assets/img/logo_engineerleaf.svg')}}"/>
+
+</div>
+</footer>
+
+</main>
+
+{%endblock%}
+
+{%block javascript%}
+<script src="{{ asset('build/article.js') }}"></script>
+{%endblock%}
