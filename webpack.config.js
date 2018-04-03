@@ -18,7 +18,7 @@ Encore
 
     // uncomment if you use Sass/SCSS files
     .enableSassLoader(function(sassOptions) {}, {
-        resolve_url_loader: false
+        resolveUrlLoader: false
     })
 
     // uncomment for legacy applications that require $/jQuery as a global variable

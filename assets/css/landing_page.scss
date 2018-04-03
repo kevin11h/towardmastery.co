@@ -1,5 +1,4 @@
 @import "~bootstrap/scss/bootstrap.scss";
-@import 'cover-bootstrap.scss';
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 
 $logo_font : 'Averia Serif Libre', cursive;
@@ -63,7 +62,7 @@ main.container-fluid{
     margin-left: 0;
 
     .btn{
-        border-radius: 0px 5px 5px 0px;
+        // border-radius: 0px 5px 5px 0px;
         cursor: pointer;
     }
 }
@@ -191,9 +190,10 @@ main.container-fluid{
 
 #blog-presentation{
     padding: 30px;
-    text-align: justify;
+    // text-align: justify;
 
     a:not(.btn){
+        font-size: 25px;
         color: $primary_color;
         text-decoration: underline;
     }
@@ -230,9 +230,11 @@ main.container-fluid{
 // }
 
 @media (min-width: 768px) {
+
+
     #blog-presentation{
-        width: 80%;
-        margin-left: auto;
+        // width: 80%;
+        margin-left: 20px;;
     }
 
   // #toolbar{
