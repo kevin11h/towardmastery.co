@@ -1,16 +1,27 @@
-<nav class="navbar navbar-toggleable-sm navbar-light bg-light">
-    <div class="navbar-brand">
+{% include 'side_toolbar.html.twig' %}
 
-      <a href="/{{ app.request.locale }}"><div class="logo-wrapper">
-          <img src="{{asset('img/logo_merged.svg')}}"/>
-          <p class="logo">Toward Mastery</p>
-      </div></a>
-    </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand logo-wrapper" href="/{{ app.request.locale }}">
+      <!-- <img src="{{asset('img/logo_merged.svg')}}"/> -->
+      <span class="logo">Toward Mastery</span>
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
+  <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
         {#% include 'side_toolbar_button.html.twig' %#}
+        <li class="nav-item">
+            <a class="nav-link" href="mailto:basunako@gmail.com" target="_blank"><span class="fa fa-envelope"></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="https://www.linkedin.com/in/basile-samel/" target="_blank"><span class="fab fa-linkedin"></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="https://twitter.com/basilesamel" target="_blank"><span class="fab fa-twitter"></span></a>
+        </li>
         {% include 'nav_flag_link.html.twig' %}
     </ul>
+  </div>
 </nav>
-
-{% include 'side_toolbar.html.twig' %}

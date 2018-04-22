@@ -11,41 +11,32 @@
 {% include 'nav.html.twig' %}
 
 <div class="row mt-3">
+<div class="col-12">
+    <p class="text-center">
+        {{ 'about-presentation'|trans|raw }} <a href="http://basilesamel.com" target="_blank">{{ 'about-about'|trans|raw }}</a>
+    </p>
 
-<div class="col-md-3" id="toolbar">
-
-    <div id="blog-presentation" class="card">
-      <div class="card-body text-center">
-        <p class="card-text">{{ 'about-presentation'|trans|raw }}</p>
-        <p class="card-text text-center mb-5"><a href="http://basilesamel.com" target="_blank" class="btn btn-secondary">{{ 'about-about'|trans|raw }}</a></p>
-        <p class="card-text mb-5">{{ 'about-contact'|trans|raw }} : &nbsp;
-            <a href="mailto:basunako@gmail.com" target="_blank"><span class="fa fa-envelope"></span></a>&nbsp;
-            <a href="https://www.quora.com/profile/Basile-Samel" target="_blank"><span class="fab fa-quora"></span></a>&nbsp;
-            <a href="https://twitter.com/basilesamel" target="_blank"><span class="fab fa-twitter"></span></a>
-        </p>
-
-        <div id="mc_embed_signup">
+    <!-- <div id="mc_embed_signup">
         <form action="https://basilesamel.us12.list-manage.com/subscribe/post?u=66ac0e518ce31f394e250917b&amp;id=07a5448e2c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate form-inline" target="_blank" novalidate>
             <div id="mc_embed_signup_scroll">
                 <div class="mb-3">
                     <div class="text-center mb-3">Newsletter</div>
-                  <label class="sr-only" for="mce-EMAIL">Email adress</label>
-                  <input type="email" value="" name="EMAIL" class="email form-control mb-3 mb-md-0" id="mce-EMAIL" placeholder="{{ 'Your email address'|trans|raw }}" required>
-                  <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                  <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_66ac0e518ce31f394e250917b_07a5448e2c" tabindex="-1" value=""></div>
-                  <input type="submit" value="{{ 'Subscribe'|trans|raw }}" name="subscribe" id="mc-embedded-subscribe" class="button btn btn-primary">
+                    <label class="sr-only" for="mce-EMAIL">Email adress</label>
+                    <input type="email" value="" name="EMAIL" class="email form-control mb-3 mb-md-0" id="mce-EMAIL" placeholder="{{ 'Your email address'|trans|raw }}" required>
+
+                    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_66ac0e518ce31f394e250917b_07a5448e2c" tabindex="-1" value=""></div>
+                    <input type="submit" value="{{ 'Subscribe'|trans|raw }}" name="subscribe" id="mc-embedded-subscribe" class="button btn btn-primary">
                 </div>
             </div>
         </form>
-        </div>
-
-      </div>
-    </div>
-
+    </div> -->
+</div>
 </div>
 
+<div class="row mt-3">
+
 <!-- Article feed -->
-<div class="col-12 col-md-8" id="articles">
+<div class="col-12 col-md-8 offset-md-2" id="articles">
 {% if articles is not empty %}
   {% include 'CRUD/article_list.html.twig' %}
 {% else %}

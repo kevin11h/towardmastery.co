@@ -22,6 +22,11 @@
 
 .navbar-nav{
     display: inline-block;
+    font-size: 25px;
+
+    .nav-link{
+        padding: 0;
+    }
 }
 
 .navbar-brand{

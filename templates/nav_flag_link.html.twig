@@ -1,6 +1,8 @@
 {% set lang = app.request.locale %}
 {% set other_lang = (lang == 'en' ? 'fr' : 'en') %}
 
+<li class="nav-item">
+
 {% if article is defined %}
 {% set other_slug = (lang == 'en' ? article.french.slug : article.english.slug ) %}
 <a class="nav-link" href="{{path('article_view_page', {'_locale': other_lang, 'slug': other_slug})}}">
@@ -19,3 +21,5 @@
     {% endif %}
 </a>
 {% endif %}
+
+</li>
