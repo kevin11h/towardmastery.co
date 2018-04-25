@@ -1,6 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{article.english.title}} | Engineer Leaf{% endblock %}
+{% trans_default_domain 'messages' %}
+{% set lang = app.request.locale %}
+{% set other_lang = (lang == 'en' ? 'fr' : 'en') %}
+
+{% if lang == 'en'%}
+    {% set current_article = article.english %}
+{% else %}
+    {% set current_article = article.french %}
+{% endif %}
+
+{% block title %}{{current_article.title}} | Engineer Leaf{% endblock %}
 
 {%block body%}
 
@@ -13,19 +23,25 @@
 <!-- Article feed -->
 <div class="col-12" id="article">
 
-{% include 'CRUD/article.html.twig' %}
+    <article class="article mx-auto">
+      <div class="row">
+      <header class="col-12">
+      <img src="{{asset(article_img_directory ~ article.cover)}}" class="article-cover">
+      <h1>{{current_article.title}}</h1>
+      </header>
+      </div>
+
+      <div class="row">
+      <div class="p-4 col-12 col-md-6 offset-md-3">
+      <p class="article-metadata"><small>{{article.date | date("F d")}}</small></p>
+      <div class="article-content">{{current_article.content | raw}}</div>
+      </div>
+      </div>
+    </article>
 
 </div>
 
 </div>
-
-<footer class="row" id="footer_article">
-<div class="col-12">
-<hr>
-<img src="{{asset('assets/img/logo_engineerleaf.svg')}}"/>
-
-</div>
-</footer>
 
 </main>
 

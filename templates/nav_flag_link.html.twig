@@ -4,8 +4,7 @@
 <li class="nav-item">
 
 {% if article is defined %}
-{% set other_slug = (lang == 'en' ? article.french.slug : article.english.slug ) %}
-<a class="nav-link" href="{{path('article_view_page', {'_locale': other_lang, 'slug': other_slug})}}">
+<a class="nav-link" href="{{path('article_view_page', {'_locale': other_lang, 'id': article.id})}}">
     {% if other_lang == 'fr' %}
         <img src="{{asset('img/french_flag_icon.png')}}">
     {% else %}

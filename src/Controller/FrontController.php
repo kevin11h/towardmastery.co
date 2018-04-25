@@ -29,11 +29,11 @@ class FrontController extends Controller{
         ));
     }
     /**
-     * @Route("/{_locale}/article/{slug}", name="article_view_page")
+     * @Route("/{_locale}/article/{id}", name="article_view_page")
      */
-    public function articleAction(ArticleTranslation $article){
+    public function articleAction(Article $article){
         return $this->render('view_article_page.html.twig', array(
-            "article" => $article->getArticle()
+            "article" => $article
         ));
     }
 }

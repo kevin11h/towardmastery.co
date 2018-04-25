@@ -38,7 +38,34 @@
 <!-- Article feed -->
 <div class="col-12 col-md-8 offset-md-2" id="articles">
 {% if articles is not empty %}
-  {% include 'CRUD/article_list.html.twig' %}
+
+    {% for article in articles %}
+
+    {% if lang == 'en'%}
+        {% set current_article = article.english %}
+    {% else %}
+        {% set current_article = article.french %}
+    {% endif %}
+
+    <a href="/{{lang}}/article/{{article.id}}" target="_blank">
+    <div class="card article mx-auto">
+      <img class="card-img-top" src="{{asset(article_img_directory ~ article.cover)}}" alt="Card image cap">
+      <div class="card-body">
+        <h4 class="card-title">{{current_article.title}}</h4>
+        <small>Posted : {{article.date | date("M d")}}</small>
+        <!-- <p>
+        {% for tag in current_article.tags %}
+        <span class="badge badge-primary badge-pill tag ">{{tag.title}}</span>
+        {% endfor %}
+        </p> -->
+        <!-- <p class="card-text">{{current_article.description}}</p> -->
+        <!-- <a href="/en/engineerleaf/article/{{current_article.slug}}" class="btn btn-danger">Read</a> -->
+      </div>
+    </div>
+    </a>
+
+    {% endfor %}
+
 {% else %}
   <p class="text-center display-4 text-muted">{{ 'article-noarticles'|trans|raw }}</p>
 {% endif %}
