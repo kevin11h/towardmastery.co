@@ -32,8 +32,8 @@
       </div>
 
       <div class="row">
-      <div class="p-4 col-12 col-md-6 offset-md-3">
-      <p class="article-metadata"><small>{{article.date | date("F d")}}</small></p>
+      <div class="p-4 col-12 col-md-4 offset-md-4">
+      <p class="article-metadata"><small>{{article.date | date("F d")}} {{'by'|trans}} <a href="http://basilesamel.com" target='_blank'>Basile Samel</a> </small></p>
       <div class="article-content">{{current_article.content | raw}}</div>
       </div>
       </div>
@@ -44,6 +44,26 @@
 </div>
 
 </main>
+
+<!-- Modal -->
+<div class="modal fade" id="subscription-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Inscription à la newsletter de Toward Mastery</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% include 'email_subscription.html.twig'%}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{'Close'|trans}}</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {%endblock%}
 

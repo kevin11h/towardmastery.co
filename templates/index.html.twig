@@ -52,7 +52,7 @@
       <img class="card-img-top" src="{{asset(article_img_directory ~ article.cover)}}" alt="Card image cap">
       <div class="card-body">
         <h4 class="card-title">{{current_article.title}}</h4>
-        <small>Posted : {{article.date | date("M d")}}</small>
+        <small>{{'Posted'|trans}} : {{article.date | date("M d")}}</small>
         <!-- <p>
         {% for tag in current_article.tags %}
         <span class="badge badge-primary badge-pill tag ">{{tag.title}}</span>
