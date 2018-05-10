@@ -7,14 +7,8 @@
 {%block body%}
 
 
-<main class="container-fluid">
+<main class="container-fluid h-100">
 {% include 'nav.html.twig' %}
-
-<div class="row mt-3">
-<div class="col-12">
-    <p class="text-center">
-        {{ 'about-presentation'|trans|raw }} <a href="http://basilesamel.com" target="_blank">{{ 'about-about'|trans|raw }}</a>
-    </p>
 
     <!-- <div id="mc_embed_signup">
         <form action="https://basilesamel.us12.list-manage.com/subscribe/post?u=66ac0e518ce31f394e250917b&amp;id=07a5448e2c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate form-inline" target="_blank" novalidate>
@@ -30,38 +24,38 @@
             </div>
         </form>
     </div> -->
-</div>
-</div>
 
-<div class="row mt-3">
+<div class="row h-100">
+
+
 
 <!-- Article feed -->
-<div class="col-12 col-md-8 offset-md-2" id="articles">
+<div class="col-12 h-100" id="articles">
 {% if articles is not empty %}
 
     {% for article in articles %}
 
     {% if lang == 'en'%}
         {% set current_article = article.english %}
+        {% set date_article = article.date|localizeddate('none', 'none', null, null, "MMM d") %}
     {% else %}
         {% set current_article = article.french %}
+        {% set date_article = article.date|localizeddate('none', 'none', null, null, "d MMM") %}
     {% endif %}
 
-    <a href="/{{lang}}/article/{{article.id}}" target="_blank">
-    <div class="card article mx-auto">
-      <img class="card-img-top" src="{{asset(article_img_directory ~ article.cover)}}" alt="Card image cap">
-      <div class="card-body">
-        <h4 class="card-title">{{current_article.title}}</h4>
-        <small>{{'Posted'|trans}} : {{article.date | date("M d")}}</small>
-        <!-- <p>
-        {% for tag in current_article.tags %}
-        <span class="badge badge-primary badge-pill tag ">{{tag.title}}</span>
-        {% endfor %}
+      <!-- <img class="card-img-top" src="{{asset(article_img_directory ~ article.cover)}}" alt="Card image cap"> -->
+
+    <a href="/{{lang}}/article/{{article.id}}" target="_blank" style="background-image:url({{asset(article_img_directory ~ article.cover)}});" class="article-wrapper">
+    <article class="jumbotron jumbotron-fluid d-flex align-items-center">
+      <div class="container">
+        <h3 class="display-4">{{date_article}} - {{current_article.title}}</h3>
+        <!-- <p class="lead">
+            {% for tag in current_article.tags %}
+            <span class="badge badge-primary badge-pill tag ">{{tag.title}}</span>
+            {% endfor %}
         </p> -->
-        <!-- <p class="card-text">{{current_article.description}}</p> -->
-        <!-- <a href="/en/engineerleaf/article/{{current_article.slug}}" class="btn btn-danger">Read</a> -->
       </div>
-    </div>
+    </article>
     </a>
 
     {% endfor %}
