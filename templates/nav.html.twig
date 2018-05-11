@@ -13,16 +13,20 @@
         {{ 'about-presentation'|trans|raw }}
     </span>
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-            <a class="nav-link" href="mailto:basile@justinien.co" target="_blank"><span class="fa fa-envelope"></span></a>
+        {% include 'nav_flag_link.html.twig' %}
+        <li class="nav-item d-block d-md-none mt-3">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-email-subscription">
+                {{'Subscribe'|trans}} <i class="fas fa-envelope-open text-white"></i>
+            </button>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="https://www.linkedin.com/in/basile-samel/" target="_blank"><span class="fab fa-linkedin"></span></a>
-        </li>
-        <li class="nav-item">
+        <li class="nav-item d-block d-md-none mt-3">
+            <a class="nav-link mr-3" href="mailto:basile@justinien.co" target="_blank"><span class="fa fa-envelope"></span></a>
+            <a class="nav-link mr-3" href="https://www.linkedin.com/in/basile-samel/" target="_blank"><span class="fab fa-linkedin"></span></a>
             <a class="nav-link" href="https://twitter.com/basilesamel" target="_blank"><span class="fab fa-twitter"></span></a>
         </li>
-        {% include 'nav_flag_link.html.twig' %}
+        <li class="nav-item d-block d-md-none mt-3">
+            <p class="text-muted">2018Ⓒ <a href="http://basilesamel.com/{{lang}}" target="_blank">Basile Samel</a></p>
+        </li>
     </ul>
   </div>
 </nav>

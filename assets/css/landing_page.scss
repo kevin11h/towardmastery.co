@@ -21,6 +21,8 @@ body{
     background-color: #f2f1ef;
     position: relative;
     font-family: $regular_font;
+
+    overflow-x: hidden;
 }
 
 .logo{
@@ -57,23 +59,40 @@ main.container-fluid{
   }
 }
 
-#mc_embed_signup{
-    .form-control{
-        width: 200px;
-    }
+// #mc_embed_signup{
+//     .form-control{
+//         width: 200px;
+//     }
+// }
+//
+// #mc-embedded-subscribe-form{
+//     margin-left: 0;
+//
+//     .btn{
+//         // border-radius: 0px 5px 5px 0px;
+//         cursor: pointer;
+//     }
+// }
+#mce-EMAIL{
+    width: 100%;
 }
 
-#mc-embedded-subscribe-form{
-    margin-left: 0;
+#sidebar{
+    position:fixed;
+    max-width: 17%;
+    z-index: 4;
+    height: 100%;
+    padding: 0;
+    padding-left: 15px;
 
-    .btn{
-        // border-radius: 0px 5px 5px 0px;
-        cursor: pointer;
+    a.nav-link{
+        font-size: 25px;
     }
 }
 
 #articles{
   // padding-top: 20px;
+  padding: 0;
 
   .article-wrapper{
       display: block;
@@ -120,10 +139,11 @@ main.container-fluid{
         text-shadow: 2px 2px black;
     }
 
-    .display-4{
-        font-size: 2rem;
-    }
   }
+}
+
+.display-4{
+    font-size: 2rem;
 }
 
 #article{
@@ -212,7 +232,7 @@ main.container-fluid{
         height: 70%;
     }
 
-    #articles article .display-4{
+    .display-4{
         font-size: 3.5rem;
     }
 

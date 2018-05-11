@@ -27,10 +27,28 @@
 
 <div class="row h-100">
 
+<div class="d-none d-md-flex flex-column col-md-2 bg-light text-center align-items-center justify-content-center" id="sidebar">
+    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-email-subscription">
+      {{'Subscribe'|trans}} <i class="fas fa-envelope-open text-white"></i>
+    </button>
 
+    <ul class="nav flex-row mb-3">
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="mailto:basile@justinien.co" target="_blank"><span class="fa fa-envelope"></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="https://www.linkedin.com/in/basile-samel/" target="_blank"><span class="fab fa-linkedin"></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="https://twitter.com/basilesamel" target="_blank"><span class="fab fa-twitter"></span></a>
+        </li>
+    </ul>
+
+    <p class="text-muted">2018Ⓒ <a href="http://basilesamel.com/{{lang}}" target="_blank">Basile Samel</a></p>
+</div>
 
 <!-- Article feed -->
-<div class="col-12 h-100" id="articles">
+<div class="col-12 col-md-10 h-100 ml-auto" id="articles">
 {% if articles is not empty %}
 
     {% for article in articles %}
@@ -47,8 +65,8 @@
 
     <a href="/{{lang}}/article/{{article.id}}" target="_blank" style="background-image:url({{asset(article_img_directory ~ article.cover)}});" class="article-wrapper">
     <article class="jumbotron jumbotron-fluid d-flex align-items-center">
-      <div class="container">
-        <h3 class="display-4">{{date_article}} - {{current_article.title}}</h3>
+      <div class="container text-center">
+        <h3 class="display-4">{{current_article.title}}</h3><span class="text-white">{{date_article}}</span>
         <!-- <p class="lead">
             {% for tag in current_article.tags %}
             <span class="badge badge-primary badge-pill tag ">{{tag.title}}</span>
@@ -60,6 +78,8 @@
 
     {% endfor %}
 
+    <p class="text-center display-4 text-muted mt-5">{{ 'That\'s all for now'|trans|raw }} <a href="#"><i class="fas fa-chevron-circle-up text-muted"></i></a></p>
+
 {% else %}
   <p class="text-center display-4 text-muted">{{ 'article-noarticles'|trans|raw }}</p>
 {% endif %}
@@ -68,6 +88,8 @@
 
 </div>
 </main>
+
+{% include 'modal_email_subscription.html.twig' %}
 
 {%endblock%}
 
