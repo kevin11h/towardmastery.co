@@ -4,6 +4,12 @@ require("../css/landing_page.scss");
 
 $(document).ready(function(){
 
+    var language = document.documentElement.lang;
+
+    require('./utils.js');
+
+    // <i class="fas fa-times"></i>
+
   // $("input[type='checkbox'], select").on("change", function(){
   //     $('input[name="current_page"]').val(1); //reset page number
   //     var form = $(this).parents('form');

@@ -28,11 +28,6 @@ class Article{
     *@ORM\Column(type="string", length=255)
     * @Assert\Image
     */
-    private $avatar;
-    /**
-    *@ORM\Column(type="string", length=255)
-    * @Assert\Image
-    */
     private $cover;
     /**
      * @ORM\OneToMany(targetEntity="ArticleTranslation", mappedBy="article", cascade="persist")
@@ -48,10 +43,6 @@ class Article{
       return $this->id;
     }
 
-    public function getTitle(){
-      return $this->title;
-    }
-
     public function getStatus(){
       return $this->status;
     }
@@ -60,12 +51,8 @@ class Article{
       return $this->date;
     }
 
-    public function getAvatar(){
-      return $this->avatar;
-    }
-
     public function getCover(){
-      return $this->cover;
+        return $this->cover;
     }
 
     public function getTranslations(){
@@ -100,11 +87,6 @@ class Article{
       return $this;
     }
 
-    public function setAvatar($avatar){
-      $this->avatar = $avatar;
-      return $this;
-    }
-
     public function setCover($cover){
       $this->cover = $cover;
       return $this;
@@ -122,19 +104,12 @@ class Article{
         array_push($translation_array, $translation->toArray());
       }
 
-      // $comment_array = array();
-      // foreach($this->comments as $comment){
-      //   array_push($comment_array, $comment->toArray());
-      // }
-
       $array = array(
         'id' => $this->id,
         'date' => $this->date,
         'status' => $this->status,
-        'avatar' => $this->avatar,
         'cover' => $this->cover,
-        'translations' => $translation_array,
-        // 'comments' => $comment_array
+        'translations' => $translation_array
       );
 
       return $array;

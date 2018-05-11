@@ -7,7 +7,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Service\ArticleService;
-use App\Service\TagService;
 use App\Entity\Article;
 use App\Entity\ArticleTranslation;
 
@@ -17,23 +16,19 @@ class FrontController extends Controller{
      */
     public function landingPage(
         $_locale = 'en',
-        ArticleService $article_service,
-        TagService $tag_service
+        ArticleService $article_service
     ){
-        // return new Response("test");
         $articles = $article_service->readAll();
-        $tags = $tag_service->readAll();
-        return $this->render('index.html.twig', array(
-            "articles" => $articles,
-            'tags' => $tags
+        return $this->render('landing.html.twig', array(
+            "articles" => $articles
         ));
     }
     /**
-     * @Route("/{_locale}/article/{id}", name="article_view_page")
+     * @Route("/{_locale}/article/{slug}", name="article_view_page")
      */
-    public function articleAction(Article $article){
+    public function articleAction(ArticleTranslation $article){
         return $this->render('view_article_page.html.twig', array(
-            "article" => $article
+            "article" => $article->getArticle()
         ));
     }
 }

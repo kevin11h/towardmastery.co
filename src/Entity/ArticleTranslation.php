@@ -33,21 +33,13 @@ class ArticleTranslation{
   */
   private $language;
   /**
-  *@ORM\Column(type="string", length=500)
-  */
-  private $description;
-  /**
    * @ORM\ManyToOne(targetEntity="Article", inversedBy="translations")
    * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
    */
   private $article;
-  /**
-   * @ORM\OneToMany(targetEntity="Tag", mappedBy="article", cascade="persist")
-   */
-  private $tags;
 
   public function __construct(){
-    $this->tags = new ArrayCollection();
+
   }
 
   public function getId(){
@@ -62,20 +54,12 @@ class ArticleTranslation{
     return $this->slug;
   }
 
-  public function getDescription(){
-    return $this->description;
-  }
-
   public function getContent(){
     return $this->content;
   }
 
   public function getLanguage(){
     return $this->language;
-  }
-
-  public function getTags(){
-    return $this->tags;
   }
 
   public function getArticle(){
@@ -103,23 +87,12 @@ class ArticleTranslation{
     return $this;
   }
 
-  public function setDescription($description){
-    $this->description = $description;
-    return $this;
-  }
-
-  public function addTag($tag){
-    $this->tags->add($tag);
-    return $this;
-  }
-
   public function toArray(){
     $array = array(
       'id' => $this->id,
       'title' => $this->title,
       'content' => $this->content,
-      'language' => $this->language,
-      'description' => $this->description
+      'language' => $this->language
     );
 
     return $array;

@@ -1,24 +1,35 @@
 {% set lang = app.request.locale %}
 {% set other_lang = (lang == 'en' ? 'fr' : 'en') %}
 
+
 <li class="nav-item">
 
 {% if article is defined %}
-<a class="nav-link" href="{{path('article_view_page', {'_locale': other_lang, 'id': article.id})}}">
+
     {% if other_lang == 'fr' %}
-        <img src="{{asset('img/french_flag_icon.png')}}">
+    {% set opposite_article = article.french %}
     {% else %}
-        <img src="{{asset('img/english_flag_icon.png')}}">
+        {% set opposite_article = article.english %}
     {% endif %}
-</a>
+
+    <a class="nav-link" href="{{path('article_view_page', {'_locale': other_lang, 'slug': opposite_article.slug})}}">
+        {% if other_lang == 'fr' %}
+            <img src="{{asset('img/french_flag_icon.png')}}">
+        {% else %}
+            <img src="{{asset('img/english_flag_icon.png')}}">
+        {% endif %}
+    </a>
+
 {% else %}
-<a class="nav-link" href="{{path('landing_page', {'_locale': other_lang})}}">
-    {% if other_lang == 'fr' %}
-        <img src="{{asset('img/french_flag_icon.png')}}">
-    {% else %}
-        <img src="{{asset('img/english_flag_icon.png')}}">
-    {% endif %}
-</a>
+
+    <a class="nav-link" href="{{path('landing_page', {'_locale': other_lang})}}">
+        {% if other_lang == 'fr' %}
+            <img src="{{asset('img/french_flag_icon.png')}}">
+        {% else %}
+            <img src="{{asset('img/english_flag_icon.png')}}">
+        {% endif %}
+    </a>
+    
 {% endif %}
 
 </li>
