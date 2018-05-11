@@ -6,8 +6,10 @@
 
 {% if lang == 'en'%}
     {% set current_article = article.english %}
+    {% set date_article = article.date|localizeddate('none', 'none', null, null, "MMMM d") %}
 {% else %}
     {% set current_article = article.french %}
+    {% set date_article = article.date|localizeddate('none', 'none', null, null, "d MMMM") %}
 {% endif %}
 
 {% block title %}{{current_article.title}} | Toward Mastery{% endblock %}
@@ -53,7 +55,7 @@
 
       <div class="row">
       <div class="p-4 col-12 col-md-4 offset-md-4">
-      <p class="article-metadata"><small>{{article.date | date("F d")}} {{'by'|trans}} <a href="http://basilesamel.com" target='_blank'>Basile Samel</a> </small></p>
+      <p class="article-metadata"><small>{{date_article}}, {{'by'|trans}} <a href="http://basilesamel.com" target='_blank'>Basile Samel</a> </small></p>
       <div class="article-content">{{current_article.content | raw}}</div>
       <hr>
       <div class="font-weight-bold">
