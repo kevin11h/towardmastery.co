@@ -12,6 +12,7 @@
         {% set opposite_article = article.english %}
     {% endif %}
 
+    {% if opposite_article %}
     <a class="nav-link" href="{{path('article_view_page', {'_locale': other_lang, 'slug': opposite_article.slug})}}">
         {% if other_lang == 'fr' %}
             <img src="{{asset('img/french_flag_icon.png')}}">
@@ -19,6 +20,7 @@
             <img src="{{asset('img/english_flag_icon.png')}}">
         {% endif %}
     </a>
+    {% endif %}
 
 {% else %}
 
@@ -29,7 +31,7 @@
             <img src="{{asset('img/english_flag_icon.png')}}">
         {% endif %}
     </a>
-    
+
 {% endif %}
 
 </li>

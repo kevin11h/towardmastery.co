@@ -38,22 +38,23 @@
 
     {% for article in articles %}
 
-    {% if lang == 'en'%}
-        {% set current_article = article.english %}
-        {% set date_article = article.date|localizeddate('none', 'none', null, null, "MMM d") %}
-    {% else %}
-        {% set current_article = article.french %}
-        {% set date_article = article.date|localizeddate('none', 'none', null, null, "d MMM") %}
-    {% endif %}
+        {% if lang == 'en'%}
+            {% set current_article = article.english %}
+            {% set date_article = article.date|localizeddate('none', 'none', null, null, "MMM d") %}
+        {% else %}
+            {% set current_article = article.french %}
+            {% set date_article = article.date|localizeddate('none', 'none', null, null, "d MMM") %}
+        {% endif %}
 
-
-    <a href="/{{lang}}/article/{{current_article.slug}}" style="background-image:url({{asset(article_img_directory ~ article.cover)}});" class="article-wrapper">
-    <article class="jumbotron jumbotron-fluid d-flex align-items-center">
-      <div class="container text-center">
-        <h3 class="display-4">{{current_article.title}}</h3><span class="text-white">{{date_article}}</span>
-      </div>
-    </article>
-    </a>
+        {% if current_article %}
+        <a href="/{{lang}}/article/{{current_article.slug}}" style="background-image:url({{asset(article_img_directory ~ article.cover)}});" class="article-wrapper">
+        <article class="jumbotron jumbotron-fluid d-flex align-items-center">
+          <div class="container text-center">
+            <h3 class="display-4">{{current_article.title}}</h3><span class="text-white">{{date_article}}</span>
+          </div>
+        </article>
+        </a>
+        {% endif %}
 
     {% endfor %}
 
