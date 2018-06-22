@@ -33,7 +33,7 @@
 </div>
 
 <!-- Article feed -->
-<div class="col-12 col-md-10 ml-auto" id="articles">
+<div class="col-12 col-md-10 ml-auto mb-5" id="articles">
 {% if articles is not empty %}
 
     {% for article in articles %}
@@ -58,7 +58,7 @@
 
     {% endfor %}
 
-    <p class="text-center display-4 text-muted mt-5">{{ 'That\'s all for now'|trans|raw }} <a href="#"><i class="fas fa-chevron-circle-up text-muted"></i></a></p>
+    <p class="text-center display-4 text-muted mt-5 mb-5">{{ 'That\'s all for now'|trans|raw }} <a href="#"><i class="fas fa-chevron-circle-up text-muted"></i></a></p>
 
 {% else %}
   <p class="text-center display-4 text-muted">{{ 'article-noarticles'|trans|raw }}</p>

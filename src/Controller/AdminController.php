@@ -8,6 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Service\ArticleService;
@@ -17,15 +22,10 @@ use App\Entity\ArticleTranslation;
 use App\Form\ArticleType;
 
 class AdminController extends Controller{
-    /**
-     * @Route("/admin", name="admin_landing_page")
-     */
-    public function adminLandingPage(){
-        return $this->render('admin/index.html.twig');
-    }
 
     /**
-     * @Route("/admin/configure/article", name="configure_article_list_page")
+     * @Route("/admin", name="configure_article_list_page")
+     * @Security("has_role('ROLE_USER')")
      */
     public function configureArticleListPage(ArticleService $article_service){
         $articles = $article_service->readAll();
@@ -35,7 +35,7 @@ class AdminController extends Controller{
     }
 
     /**
-     * @Route("/admin/configure/article/create", name="create_article")
+     * @Route("/admin/article/create", name="create_article")
      */
     public function createArticle(Request $request, ArticleService $article_service, EntityManagerInterface $em, FileUploader $uploader){
 
@@ -71,7 +71,7 @@ class AdminController extends Controller{
     }
 
     /**
-     * @Route("/admin/configure/article/edit/{id}", name="edit_article")
+     * @Route("/admin/article/edit/{id}", name="edit_article")
      */
     public function editArticle(Article $article, EntityManagerInterface $em, Request $request){
 
@@ -104,7 +104,7 @@ class AdminController extends Controller{
     }
 
     /**
-     * @Route("/admin/configure/article/delete/{id}", name="delete_article")
+     * @Route("/admin/article/delete/{id}", name="delete_article")
      */
     public function deleteArticle(Article $article, EntityManagerInterface $em){
         $article_english = $article->getEnglish();
@@ -128,5 +128,26 @@ class AdminController extends Controller{
 
         return $this->redirectToRoute('configure_article_list_page');
     }
+
+    /**
+     * @Route("/login", name="login_page")
+     */
+     public function renderLoginPage(AuthenticationUtils $auth_utils, Request $request)
+     {
+         $error = $auth_utils->getLastAuthenticationError();
+         // last username entered by the user
+         $last_username = $auth_utils->getLastUsername();
+         return $this->render('login.html.twig', array(
+             'last_username' => $last_username,
+             'error' => $error
+         ));
+     }
+     /**
+      * @Route("/logout", name="logout_page")
+      */
+     public function renderLogoutPage(): void
+     {
+         throw new \Exception('This should never be reached!');
+     }
 }
 ?>
