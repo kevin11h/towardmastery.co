@@ -23,7 +23,7 @@ class ArticleService{
   }
   public function readAll(){
     $qb = $this->em->createQueryBuilder();
-    $qb->select('a')->from(Article::class, 'a');
+    $qb->select('a')->from(Article::class, 'a')->orderBy('a.date', 'DESC');
     if(func_num_args() == 1){
       $qb->setMaxResults(func_get_arg(0));
     }
