@@ -42,24 +42,21 @@ class AdminController extends Controller{
         $article = new Article();
         $article_english = new ArticleTranslation();
         $article_english->setLanguage('en');
-        $article_french = new ArticleTranslation();
-        $article_french->setLanguage('fr');
+        // $article_french = new ArticleTranslation();
+        // $article_french->setLanguage('fr');
         $article->addTranslation($article_english);
-        $article->addTranslation($article_french);
+        // $article->addTranslation($article_french);
         $article_english->setArticle($article);
-        $article_french->setArticle($article);
+        // $article_french->setArticle($article);
         $form = $this->createForm(ArticleType::class, $article);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $avatar = $article->getAvatar();
             $cover = $article->getCover();
-            $avatar_name = $uploader->upload($avatar);
             $cover_name = $uploader->upload($cover);
-            $article->setAvatar($avatar_name);
             $article->setCover($cover_name);
-
+            $em->persist($article);
             $em->flush();
             return $this->redirectToRoute('configure_article_list_page');
         }
@@ -73,11 +70,8 @@ class AdminController extends Controller{
     /**
      * @Route("/admin/article/edit/{id}", name="edit_article")
      */
-    public function editArticle(Article $article, EntityManagerInterface $em, Request $request){
-
-        $article->setAvatar(
-          new File($this->getParameter('article_img_directory').'/'.$article->getAvatar())
-        );
+    public function editArticle(Article $article, EntityManagerInterface $em, Request $request, FileUploader $uploader){
+        $previous_cover = $article->getCover();
         $article->setCover(
           new File($this->getParameter('article_img_directory').'/'.$article->getCover())
         );
@@ -86,13 +80,14 @@ class AdminController extends Controller{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $avatar = $article->getAvatar();
             $cover = $article->getCover();
-            $avatar_name = $uploader->upload($avatar);
-            $cover_name = $uploader->upload($cover);
-            $article->setAvatar($avatar_name);
+            if(!empty($cover)){
+                $cover_name = $uploader->upload($cover);
+            } else {
+                $cover_name = $previous_cover;
+            }
             $article->setCover($cover_name);
-
+            $em->persist($article);
             $em->flush();
             return $this->redirectToRoute('configure_article_list_page');
         }
@@ -108,21 +103,21 @@ class AdminController extends Controller{
      */
     public function deleteArticle(Article $article, EntityManagerInterface $em){
         $article_english = $article->getEnglish();
-        $article_french = $article->getFrench();
+        // $article_french = $article->getFrench();
 
-        $en_tags = $article_english->getTags();
-        $fr_tags = $article_french->getTags();
+        // $en_tags = $article_english->getTags();
+        // $fr_tags = $article_french->getTags();
 
-        foreach($en_tags as $tag){
-          $em->remove($tag);
-        }
-
-        foreach($fr_tags as $tag){
-          $em->remove($tag);
-        }
+        // foreach($en_tags as $tag){
+        //   $em->remove($tag);
+        // }
+        //
+        // foreach($fr_tags as $tag){
+        //   $em->remove($tag);
+        // }
 
         $em->remove($article_english);
-        $em->remove($article_french);
+        // $em->remove($article_french);
         $em->remove($article);
         $em->flush();
 

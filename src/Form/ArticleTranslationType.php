@@ -31,13 +31,13 @@ class ArticleTranslationType extends AbstractType
 
             if (!$entity || null === $entity->getId()) {
             } else {
-                $form->add('id', HiddenType::class);
+                $form->add('id', HiddenType::class, array(
+                    'mapped' => false
+                ));
             }
 
             if($this->method != 'DELETE'){
                 $form->add('title', TextType::class);
-                $form->add('subtitle', TextType::class);
-                $form->add('description', TextType::class);
                 $form->add('language', HiddenType::class);
                 $form->add('content', TextareaType::class);
             }

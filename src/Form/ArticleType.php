@@ -32,17 +32,12 @@ class ArticleType extends AbstractType
 
             if (!$entity || null === $entity->getId()) {
             } else {
-                $form->add('id', HiddenType::class);
+                $form->add('id', HiddenType::class, array(
+                    'mapped' => false
+                ));
             }
 
             if($this->method != 'DELETE'){
-                $form->add('category', ChoiceType::class, array(
-                  'choices' => array(
-                    'Technical' => 'technical',
-                    'Essay' => 'essay',
-                    'Note' => 'note'
-                  )
-                ));
                 $form->add('date', DateType::class, array(
                     'widget' => 'single_text'
                 ));
@@ -57,8 +52,9 @@ class ArticleType extends AbstractType
                     'Private' => 'private'
                   )
                 ));
-                $form->add('avatar', FileType::class);
-                $form->add('cover', FileType::class);
+                $form->add('cover', FileType::class, array(
+                    "required" => false
+                ));
                 if (!$entity || null === $entity->getId()) {
                     $form->add('Create', SubmitType::class);
                 } else {

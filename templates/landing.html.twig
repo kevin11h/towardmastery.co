@@ -29,7 +29,7 @@
         </li>
     </ul>
 
-    <p class="text-muted">2018Ⓒ <a href="http://basilesamel.com/{{lang}}" target="_blank">Basile Samel</a></p>
+    <p class="text-muted">2018Ⓒ <a href="http://basilesamel.com/{{lang}}" target="_blank">basile 🌿</a></p>
 </div>
 
 <!-- Article feed -->
@@ -38,6 +38,8 @@
 
     {% for article in articles %}
 
+        {% if article.status == 'public' %}
+        
         {% if lang == 'en'%}
             {% set current_article = article.english %}
             {% set date_article = article.date|localizeddate('none', 'none', null, null, "MMM d") %}
@@ -54,6 +56,8 @@
           </div>
         </article>
         </a>
+        {% endif %}
+
         {% endif %}
 
     {% endfor %}

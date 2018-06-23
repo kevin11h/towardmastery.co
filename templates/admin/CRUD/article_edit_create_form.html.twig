@@ -2,18 +2,16 @@
 {{ form_start(form, {'action': app.request.uri, 'method': 'POST'}) }}
 
   <div class="form-group">
-  {{ form_label(form.category) }}
-  {{ form_errors(form.category) }}
-  {{ form_widget(form.category, {'attr': {'class':'form-control'}}) }}
-  </div>
-
-  <div class="form-group">
   {{ form_label(form.date) }}
   {{ form_errors(form.date) }}
   {{ form_widget(form.date, {'attr': {'class':'form-control'}}) }}
   </div>
 
-
+  <div class="form-group">
+  {{ form_label(form.status) }}
+  {{ form_errors(form.status) }}
+  {{ form_widget(form.status, {'attr': {'class':'form-control'}}) }}
+  </div>
 
   <ul class="nav nav-tabs" id="article-tabs" role="tablist">
     {% for translation in form.translations %}
@@ -47,18 +45,6 @@
       {{ form_widget(translation.title, {'attr': {'class':'form-control'}}) }}
       </div>
 
-      <div class="form-group">
-      {{ form_label(translation.subtitle) }}
-      {{ form_errors(translation.subtitle) }}
-      {{ form_widget(translation.subtitle, {'attr': {'class':'form-control'}}) }}
-      </div>
-
-      <div class="form-group">
-      {{ form_label(translation.description) }}
-      {{ form_errors(translation.description) }}
-      {{ form_widget(translation.description, {'attr': {'class':'form-control'}}) }}
-      </div>
-
       {{ form_row(translation.language, {'attr': {'value':'en'}}) }}
 
       <div class="form-group">
@@ -77,18 +63,6 @@
       {{ form_widget(translation.title, {'attr': {'class':'form-control'}}) }}
       </div>
 
-      <div class="form-group">
-      {{ form_label(translation.subtitle) }}
-      {{ form_errors(translation.subtitle) }}
-      {{ form_widget(translation.subtitle, {'attr': {'class':'form-control'}}) }}
-      </div>
-
-      <div class="form-group">
-      {{ form_label(translation.description) }}
-      {{ form_errors(translation.description) }}
-      {{ form_widget(translation.description, {'attr': {'class':'form-control'}}) }}
-      </div>
-
       {{ form_row(translation.language, {'attr': {'value':'fr'}}) }}
 
       <div class="form-group">
@@ -102,27 +76,13 @@
     {% endfor %}
   </div>
 
-
-  <div class="form-group">
-  {{ form_label(form.avatar) }}
-  {{ form_errors(form.avatar) }}
-  {{ form_widget(form.avatar, {'attr': {'class':'form-control'}}) }}
-  {% if article.avatar is not null %}
-  {% if (article.avatar.fileName)|length > 0 %}<p>Uploaded : </p><img class="thumbnail" src="{{asset(article_img_directory ~ article.avatar.fileName)}}">{% endif %}
-  {% endif %}
-  </div>
   <div class="form-group">
   {{ form_label(form.cover) }}
   {{ form_errors(form.cover) }}
   {{ form_widget(form.cover, {'attr': {'class':'form-control'}}) }}
-  {% if article.avatar is not null %}
-  {% if (article.cover.fileName)|length > 0 %}<p>Uploaded : </p><img class="thumbnail" src="{{asset(article_img_directory ~ article.cover.fileName)}}">{% endif %}
+  {% if article.cover is not null %}
+  {% if (article.cover.fileName)|length > 0 %}<p>Uploaded : </p><img class="thumbnail" src="{{asset(article_img_directory ~ article.cover.fileName)}}" width=300>{% endif %}
   {% endif %}
-  </div>
-  <div class="form-group">
-  {{ form_label(form.status) }}
-  {{ form_errors(form.status) }}
-  {{ form_widget(form.status, {'attr': {'class':'form-control'}}) }}
   </div>
 
 
