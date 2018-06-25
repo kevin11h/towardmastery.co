@@ -1,0 +1,459 @@
+<h1>Notes on building a Messenger bot using IBM's Watson Assistant and Botkit</h1>
+
+<!-----------------------------------  -->
+<h2>Introduction</h2>
+
+<p>At Justinien, we build <abbr title="Natural Language Processing">NLP</abbr> chatbots designed to solve legal issues, also known as legalbots.</p>
+<p>So far, we have built two bots. Both are powered by <a href="https://www.ibm.com/watson/ai-assistant/" target="_blank">IBM's Watson Assistant</a>. It is a platform to grow conversational artificial intelligence solutions, from the idea to the production environment.</p>
+<p>The first one is distributed on our own home-made messaging channel. The latest, <a href="https://www.cashmyflight-bot.com" target="_blank">Cashmyflight</a>, is based on Facebook's Messenger platform.</p>
+<p>Messenger is a secure choice when it comes to integrate your <abbr title="Business to Consumer">B2C</abbr> bot in a messaging platform. It allows you to reach millions of people through a nice, complete and easy-to-access user interface. Try building a messaging interface. I did, and I know for a fact that it is no easy feat. Our team needed to reduce its time-to-market, so we decided to outsource the <abbr title="User Experience">UX</abbr> development part to Facebook, in order to focus on creating quality content and features.</p>
+<p>Even though the documentation from Messenger and Watson Assistant is clear and well written, I found a lack of clarity concerning the use of the stack Messenger - Watson Assistant - Botkit. Thus, the objective of theses notes is to describe in one document how we managed to integrate our bot in Messenger using the aforementioned technology stack.</p>
+
+<!-----------------------------------  -->
+<h2>Set up</h2>
+
+<h3>Watson Assistant</h3>
+<p>First, you need to gather some data from Watson Assistant. In this article we consider that you have at least one workspace set up and ready to use.</p>
+<p>The parameters are available in your Bluemix interface. We need :</p>
+<ul>
+    <li>Credentials : conversation username and conversation password</li>
+    <li>A conversation url : https://gateway.watsonplatform.net/conversation/api</li>
+    <li>The workspace id</li>
+</ul>
+
+<h3>Messenger</h3>
+
+    <h4>Dummy developer account</h4>
+    <p>This step is optional but I found it useful working on my bot.</p>
+    <p>If you hate receiving notifications while you are laser-focused in your work as much as I do, setting up a "fake" Facebook account for the sole purpose of being in a distraction-free environment is the simplest way to go. Otherwise, you can use your regular Facebook account for all the steps below.</p>
+
+    <h4>Facebook development page</h4>
+    <p>Next up, we need to create a Facebook page allowing us to test our bot : <a href="https://www.facebook.com/help/104002523024878/" target="_blank">tutorial by Facebook</a></p>
+
+    <h4>Facebook production page</h4>
+    <p>Later we will create the page used for the production environment, so don't spend a lot of time on branding your Facebook development page.</p>
+
+    <h4>Facebook app</h4>
+    <p>Once your Facebook page is ready, you can log in <a href="https://developers.facebook.com" target="_blank">Facebook Developers</a> and create a Messenger application.</p>
+    <p>All you need to proceed for now is : </p>
+    <ul>
+        <li>The secret key of your app : available in Settings -> General</li>
+        <li>An access token : accessible from Settings -> Advanced</li>
+    </ul>
+
+<h3>Botkit</h3>
+<p>Following the <a href="https://github.com/watson-developer-cloud/botkit-middleware" target="_blank">Watson Assistant documentation</a>, the official solution to deploy your bot on many channels is to use Botkit as a middleware.</p>
+<p>All you need to do is to download all the files from this repository : <a href="https://github.com/watson-developer-cloud/botkit-middleware/tree/master/examples/multi-bot" target="_blank">respository link</a>.</p>
+<p>Then, we are going to change the environment variables : </p>
+
+<p>.env</p>
+<pre>
+#WATSON
+CONVERSATION_URL=&lt;watson assistant url&gt;
+CONVERSATION_USERNAME=&lt;watson assistant username&gt;
+CONVERSATION_PASSWORD=&lt;watson assistant password&gt;
+WORKSPACE_ID=&lt;workspace id&gt;
+
+#FACEBOOK
+FB_ACCESS_TOKEN=&lt;the development page access token&gt;
+FB_APP_SECRET=&lt;the development page secret key&gt;
+
+#WHAT-TO-USE
+USE_FACEBOOK=true
+</pre>
+
+<p>Now, it is time to implement the message processing logic.</p>
+
+<!-----------------------------------  -->
+<h2>Basic message formatting</h2>
+
+<h3>Text</h3>
+<p>Let's start with text messages.</p>
+<p>We can remove this part : </p>
+
+<p>bot-facebook.js</p>
+<pre>
+controller.hears('(.*)', 'message_received', function(bot, message) {
+  if (message.watsonError) {
+    console.log(message.watsonError);
+    bot.reply(message, message.watsonError.description || message.watsonError.error);
+  } else if (message.watsonData && 'output' in message.watsonData) {
+    bot.reply(message, message.watsonData.output.text.join('\n'));
+  } else {
+    console.log('Error: received message in unknown format. (Is your connection with Watson Conversation up and running?)');
+    bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
+  }
+});
+</pre>
+
+<p>And replace it with this one : </p>
+
+<p>bot-facebook.js</p>
+<pre>
+controller.hears('(.*)', 'message_received', processWatsonResponse);
+</pre>
+
+<p>When any text message is received by the controller, it will be processed by the processWatsonResponse function.</p>
+
+<p>bot-facebook.js</p>
+<pre>
+function processWatsonResponse(bot, message){
+    if (message.watsonError) {
+        console.log(message.watsonError);
+        bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
+    } else {
+        var output_size = message.watsonData.output.text.length;
+        recursiveMessageReply(0, output_size, message);
+    }
+}
+</pre>
+
+<p>I found that when dealing with complex message structures, it is best to process the output recursively, because sometimes you might need to alternate between text messages and buttons or other UI elements. Also, it looks cleaner on Messenger when you separate all the messages instead of merging them all into one.</p>
+
+<p>bot-facebook.js</p>
+<pre>
+    function recursiveMessageReply(index, max_index, message){
+        if(index &lt; max_index){
+            var current_text = message.watsonData.output.text[index];
+            if(current_text.length &gt; 0){
+                var current_reply = {text: current_text};
+
+                bot.reply(message, current_reply, function(err, response){
+                    recursiveMessageReply(++index, max_index, message);
+                });
+            } else {
+                recursiveMessageReply(++index, max_index, message);
+            }
+        }
+    }
+</pre>
+
+<p>We can now send and receive simple text messages.</p>
+
+<h3>Quick replies</h3>
+<p>Quick replies are a great way to guide the user throughout the conversation.</p>
+<p>bot-facebook.js</p>
+<pre>
+function processWatsonResponse(bot, message){
+    if (message.watsonError) {
+        console.log(message.watsonError);
+        bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
+    } else {
+        var reply_object = {};
+
+        if(message.watsonData.output.preselection){
+          var quick_replies_size = message.watsonData.output.preselection.length;
+          var quick_replies = [];
+
+          for(i=0 ; i&lt;quick_replies_size ; i++){
+              quick_replies.push({
+                  content_type: "text",
+                  title: message.watsonData.output.preselection[i],
+                  payload: message.watsonData.output.preselection[i]
+              });
+          }
+
+          reply_object.quick_replies = quick_replies;
+        }
+
+        var output_size = message.watsonData.output.text.length;
+        recursiveMessageReply(0, output_size, message, reply_object);
+    }
+}
+</pre>
+<p>bot-facebook.js</p>
+<pre>
+function recursiveMessageReply(index, max_index, message, reply_object){
+    if(index &lt; max_index){
+        var current_text = message.watsonData.output.text[index];
+        if(current_text.length &gt; 0){
+            var current_reply = {text: current_text};
+            //display the quick replies when the last text message appears
+            if(index == max_index-1){
+                current_reply.quick_replies = reply_object.quick_replies;
+            }
+            bot.reply(message, current_reply, function(err, response){
+                recursiveMessageReply(++index, max_index, message, reply_object);
+            });
+        } else {
+            recursiveMessageReply(++index, max_index, message, reply_object);
+        }
+    }
+}
+</pre>
+
+<h3>URL button</h3>
+<p>It is not possible to use html links (&lt;a&gt;&lt;/a&gt;) in a Messenger message. Instead, you are expected to display an URL button.</p>
+<p>bot-facebook.js</p>
+<pre>
+function processWatsonResponse(bot, message){
+    if (message.watsonError) {
+        bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
+    } else {
+        var reply_object = {};
+
+        if(message.watsonData.output.preselection){
+          var quick_replies_size = message.watsonData.output.preselection.length;
+          var quick_replies = [];
+
+          for(i=0 ; i&lt;quick_replies_size ; i++){
+              quick_replies.push({
+                  content_type: "text",
+                  title: message.watsonData.output.preselection[i],
+                  payload: message.watsonData.output.preselection[i]
+              });
+          }
+
+          reply_object.quick_replies = quick_replies;
+        }
+
+        var output_size = message.watsonData.output.text.length;
+        if(message.watsonData.output.button){
+            recursiveMessageWithButtonReply(0, output_size, message, reply_object, 1);
+        } else {
+            recursiveMessageReply(0, output_size, message, reply_object);
+        }
+
+    }
+}
+</pre>
+<p>bot-facebook.js</p>
+<pre>
+function recursiveMessageWithButtonReply(index, max_index, message, reply_object, attachment_counter){
+
+    if(index &lt; max_index){
+        var current_text = message.watsonData.output.text[index];
+
+        if(current_text.length &gt; 0){
+            var current_reply = {text: current_text};
+            if(index == max_index-1){
+
+                var attachment = {
+                    type: "template",
+                    payload:{
+                        template_type: "button",
+                        text: current_text,
+                        buttons:[{
+                            type: "web_url",
+                            url: message.watsonData.output.button.url,
+                            title: message.watsonData.output.button.title,
+                            webview_height_ratio : "tall"
+                        }]
+                    }
+                };
+                bot.reply(message, {attachment:attachment, quick_replies : reply_object.quick_replies}, function(err, response){
+                    console.log("error:" + JSON.stringify(err) + " response:" + JSON.stringify(response));
+                    recursiveMessageWithButtonReply(++index, max_index, message, reply_object, ++attachment_counter);
+                });
+            } else {
+                bot.reply(message, current_reply, function(err, response){
+                    recursiveMessageWithButtonReply(++index, max_index, message, reply_object, ++attachment_counter);
+                });
+            }
+        } else {
+            recursiveMessageWithButtonReply(++index, max_index, message, reply_object, attachment_counter);
+        }
+    }
+}
+</pre>
+
+<h3>Attachment</h3>
+
+<p>bot-facebook.js</p>
+<pre>
+controller.on('message_received', processMessengerAttachment);
+</pre>
+
+<p>bot-facebook.js</p>
+<pre>
+var middleware = require('botkit-middleware-watson')({
+  username: process.env.CONVERSATION_USERNAME,
+  password: process.env.CONVERSATION_PASSWORD,
+  workspace_id: process.env.WORKSPACE_ID,
+  url: process.env.CONVERSATION_URL || 'https://gateway.watsonplatform.net/conversation/api',
+  version_date: '2017-05-26'
+});
+</pre>
+
+<pre>
+function processWatsonResponse(bot, message){
+    if (message.watsonError) {
+        bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
+    } else {
+        var reply_object = {};
+
+        if(message.watsonData.output.preselection){
+          var quick_replies_size = message.watsonData.output.preselection.length;
+          var quick_replies = [];
+
+          for(i=0 ; i&lt;quick_replies_size ; i++){
+              quick_replies.push({
+                  content_type: "text",
+                  title: message.watsonData.output.preselection[i],
+                  payload: message.watsonData.output.preselection[i]
+              });
+          }
+
+          reply_object.quick_replies = quick_replies;
+
+        }
+
+        if(message.watsonData.output.document_type){
+          current_asked_document_type = message.watsonData.output.document_type;
+        }
+
+        var output_size = message.watsonData.output.text.length;
+        if(message.watsonData.output.button){
+            recursiveMessageWithButtonReply(0, output_size, message, reply_object, 1);
+        } else {
+            recursiveMessageReply(0, output_size, message, reply_object);
+        }
+
+    }
+}
+</pre>
+
+<p>bot-facebook.js</p>
+<pre>
+function processMessengerAttachment(bot, message){
+    if(message.attachments && current_asked_document_type){
+        var attachment = message.attachments[0].payload.url;
+        console.log("Received : " + JSON.stringify(message));
+
+        backend.uploadDocument(attachment, last_conversation_id, current_asked_document_type).then(function(response){
+            if (!response.ok) {
+                 console.log('Document upload - Error ' + response.status + ' ' + response.statusText + ' - url : ' + url + ' in ' + conversation_id);
+            } else {
+                current_asked_document_type = false;
+                var newMessage = clone(message);
+                newMessage.text = "J'ai terminé !";
+
+                middleware.sendToWatsonAsync(bot, newMessage).then(function(response){
+                    processWatsonResponse(bot, newMessage);
+                }, function(err){
+                    console.log('Document upload - Error ' + err.status + ' ' + err.statusText);
+                });
+            }
+        }, function(err){
+            console.log('Error document upload');
+        });
+    } else {
+        bot.reply(message, "Désolé, je ne sais pas lire ce fichier :)");
+    }
+}
+</pre>
+
+<h3>Get started button</h3>
+<p>get_started_button.sh</p>
+<pre>
+#!/bin/sh
+curl -X POST -H "Content-Type: application/json" -d '{
+    "get_started" : {"payload": "GET_STARTED"}
+}'
+"https://graph.facebook.com/v2.6/me/messenger_profile?access_token=&lt;your_facebook_access_token&gt;";
+</pre>
+
+<h3>Persistent menu</h3>
+<p>persistent_menu.sh</p>
+<pre>
+#!/bin/sh
+curl -X POST -H "Content-Type: application/json" -d '{
+    "persistent_menu":[{
+        "locale":"default",
+        "composer_input_disabled": false,
+        "call_to_actions":
+            [{
+                "title":"Conversation",
+                "type":"nested",
+                "call_to_actions":[{
+                    "title":"Redémarrer la conversation",
+                    "type":"postback",
+                    "payload":"Redémarrer la conversation"
+                }]
+            },{
+                "title":"Contact",
+                "type":"nested",
+                "call_to_actions":[{
+                    "type":"web_url",
+                    "title":"Notre entreprise",
+                    "url":"http://justinien.co",
+                    "webview_height_ratio":"full"
+                },{
+                    "title":"Nous contacter",
+                    "type":"postback",
+                    "payload":"Nous contacter"
+                }]
+            }]
+    }]
+}' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=your_facebook_access_token"
+</pre>
+
+<h3>Bot description</h3>
+<p>greeting.sh</p>
+<pre>
+#!/bin/sh
+curl -X POST -H "Content-Type: application/json" -d '{
+  "greeting": [
+    {
+      "locale":"default",
+      "text":"Le premier chatbot pour l'\''indemnisation des passagers aériens. Retard, annulation, perte de babages, refus d'\''accès ? Obtenez une indemnité en quelques minutes !"
+    }
+  ]
+}' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=your_facebook_access_token"
+</pre>
+
+<!-----------------------------------  -->
+<h2>Testing</h2>
+
+<h3>Development environment</h3>
+
+    <h4>Setting up a localtunnel</h4>
+    <p>During the development phase, you can use temporarily your own machine as a web server using localtunnel.</p>
+    <p>Console terminal</p>
+    <pre>
+    #install
+    npm install -g localtunnel
+
+    #create a localtunnel
+    lt -p 8001 -s custom-subdomain-15
+
+    #launch your web server
+    node server.js
+    </pre>
+
+    <h4>Setting up a webhook</h4>
+    <p>Go to developers.facebook.com and configure a webhook by navigating to Messenger -> Parameters -> Webhooks </p>
+
+    <h4>Testing</h4>
+    <p>Once you are done with the configuration, you can communicate with your bot directly from your Facebook page.</p>
+
+    <h4>Debugging</h4>
+    <p>When the need for debugging arises, the most straightforward way to do it is to have a look at your server logs in the console terminal (below your node server.js instruction). You can set up logs by simply using the console.log() function in your js files.</p>
+
+<h3>Production environment</h3>
+
+    <h4>Facebook production page</h4>
+    <p>Similarly to the development page, we must create a production page that will be used by the end-users. All you have to do is repeat the same process than the one we used previously (facebook page, facebook app, webhook), and update the .env file.</p>
+    <p>.env</p>
+    <pre>
+        #PRODUCTION ENV
+        #FB_ACCESS_TOKEN=&lt;the production page access token&gt;
+        #FB_APP_SECRET=&lt;the production page secret key&gt;
+
+        #DEV ENV
+        FB_ACCESS_TOKEN=&lt;the development page access token&gt;
+        FB_APP_SECRET=&lt;the development page secret key&gt;
+
+        FB_VERIFY_TOKEN=&lt;your webhook token&gt;
+    </pre>
+
+    <h4>App hosting</h4>
+    <p>Instead of using a localtunnel, we are going to host the app on a real web server. At Justinien we use IBM's Cloud Foundry but the choice is up to you.</p>
+
+<!-----------------------------------  -->
+<h2>App review</h2>
+<p>Once your bot is ready, it has to be submitted to the Facebook App review before going public. The process can take a long time (one month and a week in our case), so make sure to have a clean bot that respects all of <a href="https://developers.facebook.com/docs/apps/review/" target="_blank">Facebook terms and conditions</a>.</p>
+
+<!-----------------------------------  -->
+<h2>Conclusion</h2>
+<p>Congratulations, you now have own a smart bot available to everyone ! Feel free to reach out to <a href="http://basilesamel.com" target="_blank">me</a> if you have any questions or need further details.</p>
