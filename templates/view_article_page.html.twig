@@ -48,7 +48,7 @@
     <article class="article mx-auto">
       <div class="row">
       <header class="col-12">
-      <img src="{{asset(article_img_directory ~ article.cover)}}" class="article-cover">
+      <!-- <img src="{{asset(article_img_directory ~ article.cover)}}" class="article-cover"> -->
       <h1>{{current_article.title}}</h1>
       </header>
       </div>
@@ -61,10 +61,10 @@
       <div class="font-weight-bold">
           {% if lang == 'en' %}
           <p>I am <a href="http://basilesamel.com" target="_blank">Basile</a>, a young software craftsman documenting his entrepreneurship journey. If you liked this article, you can follow my adventures in real time on <a href="https://twitter.com/basilesamel" target="_blank">Twitter</a> or <a href="#" data-toggle="modal" data-target="#modal-email-subscription">sign up to my newsletter for more</a>. I’m always looking forward to meeting new people and learning from others !</p>
-          <p>My startup : <a href="http//justinien.co" target="_blank">justinien.co</a></p>
+          <p>My startup : <a href="https://justinien.co" target="_blank">justinien.co</a></p>
           {% else %}
           <p>Je suis <a href="http://basilesamel.com/fr" target='_blank'>Basile</a>, un jeune artisan logiciel documentant sa quête entrepreneuriale. Si tu as aimé cet article, tu peux suivre mes aventures en temps réel sur <a href="https://twitter.com/basilesamel" target="_blank">Twitter</a> ou <a href="#" data-toggle="modal" data-target="#modal-email-subscription">t'inscrire à ma newsletter</a> pour rester informer. Je suis toujours prédisposé à rencontrer de nouvelles personnes et à apprendre des autres !</p>
-          <p>Ma startup : <a href="http//justinien.co" target="_blank">justinien.co</a></p>
+          <p>Ma startup : <a href="https://justinien.co" target="_blank">justinien.co</a></p>
           {% endif %}
       </div>
       </div>

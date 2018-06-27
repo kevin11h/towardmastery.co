@@ -153,7 +153,7 @@ body{
         padding-left: 30px;
     }
 
-    p{
+    p, ul, h2, h3, h4, pre{
         max-width: 700px;
         margin-left: auto;
         margin-right: auto;
@@ -162,6 +162,7 @@ body{
     img{
         max-width: 90%;
     }
+
     img.article-cover{
         max-width: 100%;
     }
@@ -312,6 +313,11 @@ body{
       .tags{
         text-align: left;
       }
+    }
+
+    img.article-cover{
+        width: 100%;
+        max-height: 300px;
     }
   }
 }

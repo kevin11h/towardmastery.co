@@ -63,7 +63,7 @@
 <p>Then, change the environment variables : </p>
 
 <p>.env</p>
-<pre>
+<pre><code>
 #WATSON
 CONVERSATION_URL=&lt;watson assistant url&gt;
 CONVERSATION_USERNAME=&lt;watson assistant username&gt;
@@ -76,7 +76,7 @@ FB_APP_SECRET=&lt;the development page secret key&gt;
 
 #WHAT-TO-USE
 USE_FACEBOOK=true
-</pre>
+</code></pre>
 
 <p>Now, it is time to implement the message processing logic.</p>
 
@@ -88,7 +88,7 @@ USE_FACEBOOK=true
 <p>We can remove this part : </p>
 
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 controller.hears('(.*)', 'message_received', function(bot, message) {
   if (message.watsonError) {
     console.log(message.watsonError);
@@ -100,20 +100,20 @@ controller.hears('(.*)', 'message_received', function(bot, message) {
     bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
   }
 });
-</pre>
+</code></pre>
 
 <p>And replace it with this one : </p>
 
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 // when any text message is received by the controller, it will be processed by the processWatsonResponse function
 controller.hears('(.*)', 'message_received', processWatsonResponse);
-</pre>
+</code></pre>
 
 <p>Next : </p>
 
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 function processWatsonResponse(bot, message){
     if (message.watsonError) {
         console.log(message.watsonError);
@@ -123,12 +123,12 @@ function processWatsonResponse(bot, message){
         recursiveMessageReply(0, output_size, message);
     }
 }
-</pre>
+</code></pre>
 
 <p>I found that when dealing with complex message structures, it is best to process the output recursively, because sometimes you might need to alternate between text messages and buttons or other UI elements. Also, it looks cleaner on Messenger when you separate all the messages instead of merging them all into one.</p>
 
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 function recursiveMessageReply(index, max_index, message){
     if(index &lt; max_index){
         var current_text = message.watsonData.output.text[index];
@@ -145,14 +145,14 @@ function recursiveMessageReply(index, max_index, message){
         }
     }
 }
-</pre>
+</code></pre>
 
 <p>It's done. We can now send and receive simple text messages.</p>
 
 <h3>Quick replies</h3>
 <p>Quick replies are a great way to guide the user throughout the conversation.</p>
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 function processWatsonResponse(bot, message){
     if (message.watsonError) {
         console.log(message.watsonError);
@@ -181,11 +181,11 @@ function processWatsonResponse(bot, message){
         recursiveMessageReply(0, output_size, message, reply_object);
     }
 }
-</pre>
+</code></pre>
 <p>Link : <a href="https://developers.facebook.com/docs/messenger-platform/send-messages/quick-replies" target="_blank">Facebook quick replies documentation</a></p>
 
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 function recursiveMessageReply(index, max_index, message, reply_object){
     if(index &lt; max_index){
         var current_text = message.watsonData.output.text[index];
@@ -205,12 +205,12 @@ function recursiveMessageReply(index, max_index, message, reply_object){
         }
     }
 }
-</pre>
+</code></pre>
 
 <h3>URL button</h3>
 <p>It is not possible to use html links (&lt;a&gt;&lt;/a&gt;) in a Messenger message. Instead, you are expected to display an URL button.</p>
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 function processWatsonResponse(bot, message){
     if (message.watsonError) {
         bot.reply(message, "I'm sorry, but for technical reasons I can't respond to your message");
@@ -243,10 +243,10 @@ function processWatsonResponse(bot, message){
 
     }
 }
-</pre>
+</code></pre>
 
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 function recursiveMessageWithButtonReply(index, max_index, message, reply_object, attachment_counter){
 
     if(index &lt; max_index){
@@ -285,7 +285,7 @@ function recursiveMessageWithButtonReply(index, max_index, message, reply_object
         }
     }
 }
-</pre>
+</code></pre>
 <p>Link : <a href="https://developers.facebook.com/docs/messenger-platform/reference/buttons/url" target="_blank">Facebook documentation on URL buttons</a></p>
 
 <h3>Attachment</h3>
@@ -293,13 +293,13 @@ function recursiveMessageWithButtonReply(index, max_index, message, reply_object
 <p>Attachments allow you to process the user's document in your backend.</p>
 <p>First, a new controller is needed : </p>
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 controller.on('message_received', processMessengerAttachment);
-</pre>
+</code></pre>
 
 <p>You also need to access Botkit's middleware logic to send asynchronous message to Watson Assistant once the attachment is dealt with :</p>
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 var middleware = require('botkit-middleware-watson')({
   username: process.env.CONVERSATION_USERNAME,
   password: process.env.CONVERSATION_PASSWORD,
@@ -307,9 +307,9 @@ var middleware = require('botkit-middleware-watson')({
   url: process.env.CONVERSATION_URL || 'https://gateway.watsonplatform.net/conversation/api',
   version_date: '2017-05-26'
 });
-</pre>
+</code></pre>
 
-<pre>
+<pre><code>
 var current_asked_document_type;
 
 function processWatsonResponse(bot, message){
@@ -348,10 +348,10 @@ function processWatsonResponse(bot, message){
 
     }
 }
-</pre>
+</code></pre>
 
 <p>bot-facebook.js</p>
-<pre>
+<pre><code>
 function processMessengerAttachment(bot, message){
     if(message.attachments && current_asked_document_type){
         var attachment = message.attachments[0].payload.url;
@@ -382,24 +382,24 @@ function processMessengerAttachment(bot, message){
         bot.reply(message, "Sorry I cannot read this file)");
     }
 }
-</pre>
+</code></pre>
 <p>Link : <a href="https://developers.facebook.com/docs/messenger-platform/reference/send-api#attachment" target="_blank">Facebook documentation on attachments</a></p>
 
 <h3>Get started button</h3>
 <p>A Get Started button is necessary to validate an bot app review. It's a simple CURL command :</p>
 <p>get_started_button.sh</p>
-<pre>
+<pre><code>
 #!/bin/sh
 curl -X POST -H "Content-Type: application/json" -d '{
     "get_started" : {"payload": "GET_STARTED"}
 }'
 "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=&lt;your_facebook_access_token&gt;";
-</pre>
+</code></pre>
 
 <h3>Persistent menu</h3>
 <p>A persistent menu is useful to help your user get a quick access to additional informations or conversation entry points. It's also a simple curl command : </p>
 <p>persistent_menu.sh</p>
-<pre>
+<pre><code>
 #!/bin/sh
 curl -X POST -H "Content-Type: application/json" -d '{
     "persistent_menu":[{
@@ -430,12 +430,12 @@ curl -X POST -H "Content-Type: application/json" -d '{
             }]
     }]
 }' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=&lt;your_facebook_access_token&gt;"
-</pre>
+</code></pre>
 
 <h3>Bot description</h3>
 <p>A greeting message is also necessary to validate an bot app review. A simple CURL command as well :</p>
 <p>greeting.sh</p>
-<pre>
+<pre><code>
 #!/bin/sh
 curl -X POST -H "Content-Type: application/json" -d '{
   "greeting": [
@@ -445,7 +445,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
     }
   ]
 }' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=&lt;your_facebook_access_token&gt;"
-</pre>
+</code></pre>
 
 <!-----------------------------------  -->
 <h2>Testing</h2>
@@ -455,7 +455,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
     <h4>Setting up a localtunnel</h4>
     <p>During the development phase, you can use temporarily your own machine as a web server using localtunnel :</p>
     <p>Console terminal</p>
-    <pre>
+    <pre><code>
     #install
     npm install -g localtunnel
 
@@ -464,16 +464,16 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
     #launch your web server
     node server.js
-    </pre>
+    </code></pre>
 
     <h4>Setting up a webhook</h4>
     <p>Go to developers.facebook.com and configure a webhook by navigating to Messenger -> Parameters -> Webhooks </p>
     <p>You will need to enter a callback link (https://&lt;your custom subdomain&gt;.localtunnel.me/facebook/receive) and a verification token (it can be anything you want).</p>
     <p>Update your .env file with the verification token and relaunch your local server.</p>
     <p>.env</p>
-    <pre>
+    <pre><code>
         FB_VERIFY_TOKEN=&lt;your webhook token&gt;
-    </pre>
+    </code></pre>
 
     <h4>Testing</h4>
     <p>Once you are done with the configuration, you can communicate with your bot directly from your Facebook page.</p>
@@ -486,7 +486,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
     <h4>Facebook production page</h4>
     <p>Similarly to the development page, we must create a production page that will be used by the end-users. All you have to do is repeat the same process than the one we used previously (facebook page, facebook app, webhook), and update the .env file.</p>
     <p>.env</p>
-    <pre>
+    <pre><code>
         #PRODUCTION ENV
         #FB_ACCESS_TOKEN=&lt;the production page access token&gt;
         #FB_APP_SECRET=&lt;the production page secret key&gt;
@@ -496,7 +496,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
         FB_APP_SECRET=&lt;the development page secret key&gt;
 
         FB_VERIFY_TOKEN=&lt;your webhook token&gt;
-    </pre>
+    </code></code></pre>
 
     <h4>App hosting</h4>
     <p>Instead of using a localtunnel, we are going to host the app on a real web server. At Justinien we use IBM's Cloud Foundry but the choice is up to you.</p>
