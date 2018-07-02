@@ -45,10 +45,14 @@
 <!-- Article feed -->
 <div class="col-12 col-md-10 ml-auto" id="article">
 
+    <div class="jumbotron jumbotron-fluid article-cover" style="background-image:url('{{asset(article_img_directory ~ article.cover)}}')">
+      <div class="container">
+      </div>
+    </div>
+
     <article class="article mx-auto">
       <div class="row">
       <header class="col-12">
-      <!-- <img src="{{asset(article_img_directory ~ article.cover)}}" class="article-cover"> -->
       <h1>{{current_article.title}}</h1>
       </header>
       </div>
