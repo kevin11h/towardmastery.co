@@ -17,6 +17,10 @@
     <link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
 
+    {% block meta_description %}<meta name="description" content="{{ 'about-presentation'|trans|raw }}" />{% endblock %}
+
+    <meta name="author" content="Basile Samel">
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     {% if app.environment == 'prod'%}
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115881788-1"></script>

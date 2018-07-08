@@ -14,6 +14,13 @@
 
 {% block title %}{{current_article.title}} | Toward Mastery{% endblock %}
 
+{% block meta_description %}
+
+    {% set article_content = current_article.content|striptags %}
+    <meta name="description" content="{{ article_content|length > 50 ? article_content|slice(0, 50) ~ '...' : article_content }} ..." />
+
+{% endblock %}
+
 {%block body%}
 
 {% include 'nav.html.twig' %}
