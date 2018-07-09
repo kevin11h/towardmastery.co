@@ -17,7 +17,9 @@
 {% block meta_description %}
 
     {% set article_content = current_article.content|striptags %}
-    <meta name="description" content="{{ article_content|length > 50 ? article_content|slice(0, 50) ~ '...' : article_content }} ..." />
+    <meta name="description" content="{{ article_content|length > 50 ? article_content|slice(0, 50) ~ '...' : article_content }}" />
+    <meta property="og:image" content="http://towardmastery.co{{asset(article_img_directory ~ article.cover)}}">
+    <meta name="twitter:image" content="http://towardmastery.co{{asset(article_img_directory ~ article.cover)}}">
 
 {% endblock %}
 
