@@ -1,0 +1,189 @@
+<h1>Securing Symfony entities using the AES-256</h1>
+
+<p>I care about my users. Tech is meant to serve people, not the other way around.</p>
+
+<p>Encryption is an essential component when it comes to securing user data. In a database, encryption prevents information leaks. It can also be used to anonymize all the knowledge gathered in an application, to make it private, personal.</p>
+
+<p>In a word, encrypting is caring.</p>
+
+<p>This article proposes an implementation of the most secured encryption standard available, the Advanced Encryption Standard (AES, also known as Rijndael) over 256 bits, in order to secure the storage of Entity properties in the PHP framework Symfony.</p>
+
+<h2>Design choice</h2>
+<p>Symfony is a MVC framework.</p>
+<p>Three possibilities : </p>
+<ul>
+    <li>Encryption service : inject an Encryption service when using the entity's CRUD service</li>
+    <li>Define a new entity annotation</li>
+    <li>Directly inside the Entity : encrypt/decrypt directly from the entity's getters and setters</li>
+</ul>
+<p>I choose the last one for three reasons :</p>
+<ul>
+    <li>Accessing encrypted data from Twig will appear no different from accessing unencrypted properties : {{object.property}}</li>
+    <li>It keeps things simple : no additional service layer, just a slightly thicker entity class. Best practices suggest to use an additional service layer, but I don't like the idea of explicitly parsing the data to look for encrypted properties. It's just a personal preference.</li>
+    <li><span class="font-weight-bold">Defining a new entity annotation would be the cleanest option</span> for the Symfony framework, but it's also the most complex one. I want to give a raw AES implementation, easy to replicate in any PHP program.</li>
+</ul>
+
+<h2>Encryption algorithm</h2>
+<p>In PHP, encryption is managed by the official implementation of the OpenSSL library<sup>[1]</sup>.</p>
+<p>PHP not providing multiple inheritance, I resort to a trait<sup>[2]</sup> to make the code more reusable throughout the web application.</p>
+<p>Encryptable.php</p>
+<pre>
+&lt;?php
+namespace App\Entity;
+
+trait Encryptable{
+
+    /**
+      * This function encrypts the input following the Advanced Encryption Standard over 256 bits
+      *
+      * @param string $data The input data to encrypt
+      *
+      * @return string the encrypted data
+      */
+    public function encrypt($data){
+
+        //the cipher method
+        $method = 'aes-256-cbc';
+
+        //your app AES password
+        $key = $_ENV['AES_PASSWORD'];
+
+        //generate an initialization vector on 16 random bytes (size defined by the AES specification)
+        $iv = openssl_random_pseudo_bytes(16);
+
+        //OPENSSL_RAW_DATA makes sure that the function returns a raw binary representation of the data without encoding (by default, the data is base64-encoded so my code here is redundant in order to be clearer)
+        //the result is base64-encoded so that it's easier to manipulate the data across any sub-systems
+        $encrypted_data = base64_encode(openssl_encrypt($data, $method, $key, OPENSSL_RAW_DATA, $iv));
+
+        //we need the initialization vector to decrypt the data later
+        $result = $encrypted_data . ':' . base64_encode($iv);
+
+        return $result;
+
+    }
+
+    /**
+      * This function decrypts the input following the Advanced Encryption Standard over 256 bits
+      *
+      * @param string $encrypted_data The input encrypted data to decrypt
+      *
+      * @return string the original data
+      */
+    public function decrypt($encrypted_data){
+
+        //just the inverse operation
+
+        $method = 'aes-256-cbc';
+
+        $key = $_ENV['AES_PASSWORD'];
+
+        $data_parts = explode(':', $encrypted_data);
+        $data = base64_decode($data_parts[0]);
+        $iv = base64_decode($data_parts[1]);
+
+        $result = openssl_decrypt($data, $method, $key, OPENSSL_RAW_DATA, $iv);
+
+        return $result;
+    }
+}
+</pre>
+
+<h2>Setting up the AES password</h2>
+
+<p>Encode a password to be used by the AES algorithm, using Symfony's command line interface :</p>
+<div class="text-center">
+<img src="/uploads/article/screenshot_password_encode.jpg" alt="Picture : Encoding a password using Symfony's command line interface">
+</div>
+
+<p>Obviously, don't hard code the password. Instead, set up a dedicated environment variable :</p>
+
+<p>.env</p>
+<pre>
+AES_PASSWORD=&lt;your bcrypted password by Symfony&gt;
+</pre>
+
+
+<h2>Integration to an Entity</h2>
+
+<p>Now, all needs to be done is to integrate the trait inside the class of the entity.</p>
+
+<p>Operation.php</p>
+<pre>
+&lt;?php
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+//import the trait
+use App\Entity\Encryptable;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Operation")
+ */
+class Operation{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    /**
+     * @ORM\Column(type="string", length=260)
+     */
+    private $amount;
+
+    public function __construct(){
+    }
+
+    //// GETTERS
+
+    public function getId(){
+        return $this->id;
+    }
+
+    public function getAmount(){
+        // the decrypt() function is ready to use
+        return $this->decrypt($this->amount);
+    }
+
+    //// SETTERS
+
+    public function setAmount($amount){
+        // the encrypt() function is ready to use
+        $this->amount = $this->encrypt($amount);
+        return $this;
+    }
+
+    //// FUNCTIONS
+
+    // integrate the trait
+    use Encryptable;
+}
+</pre>
+
+<p>The Entity can now be seamlessly manipulated by the service or controller layers.</p>
+
+<h2>Conclusion</h2>
+
+<p>Your data is now safe !</p>
+<p>How the encrypted data looks like : </p>
+<div class="text-center">
+<img src="/uploads/article/screenshot_encoded_database.jpg" alt="Picture : Encoded database">
+</div>
+
+<p>And once it's decrypted : </p>
+<div class="text-center">
+<img src="/uploads/article/screenshot_decoded_result.jpg" alt="Picture : Decoded result">
+</div>
+
+<p>I hope your users will never have to thank you for this, but at least you can rest assured you did the right thing :)</p>
+
+<p>References :</p>
+<ol>
+<li>Official documentation of PHP's OpenSSL encrypt implementation  : <a href="http://php.net/manual/fr/function.openssl-encrypt.php" target="_blank">http://php.net/manual/fr/function.openssl-encrypt.php</a></li>
+<li>PHP official documentation - Trait  : <a href="http://php.net/manual/en/language.oop5.traits.php" target="_blank">http://php.net/manual/en/language.oop5.traits.php</a></li>
+<li>AES-256 encryption and decryption in PHP and C# : <a href="https://gist.github.com/odan/138dbd41a0c5ef43cbf529b03d814d7c#file-with_bcrypt_password_hash-md" target="_blank">https://gist.github.com/odan/138dbd41a0c5ef43cbf529b03d814d7c#file-with_bcrypt_password_hash-md</a></li>
+<li>The Missing PHP AES Encryption Example : <a href="https://blog.turret.io/the-missing-php-aes-encryption-example/" target="_blank">https://blog.turret.io/the-missing-php-aes-encryption-example/</a></li>
+<li>Complete specification of the Rijndael Block Cipher : <a href="https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/aes-development/Rijndael-ammended.pdf" target="_blank">https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/aes-development/Rijndael-ammended.pdf</a></li>
+</ol>
