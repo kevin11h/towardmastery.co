@@ -56,15 +56,20 @@ class AdminController extends Controller{
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // dump($article);die;
+
             $article = $article_service->create(array(
                 'date' => $article->getDate(),
                 'status' => $article->getStatus(),
                 'cover' => $article->getCover(),
                 'translations' => array(
-                    'title' => $article->getTranslations()[0]->getTitle(),
-                    'content' => $article->getTranslations()[0]->getContent(),
-                    'language' => 'en'
+                    array(
+                        'title' => $article->getTranslations()[0]->getTitle(),
+                        'content' => $article->getTranslations()[0]->getContent(),
+                        'language' => 'en'
+                    )
                 ),
+                'tags' => $request->request->get('tags')
             ));
 
             return $this->redirectToRoute('configure_article_list_page');
@@ -85,9 +90,11 @@ class AdminController extends Controller{
         ArticleService $article_service
     ){
         $previous_cover = $article->getCover();
-        $article->setCover(
-          new File($this->getParameter('article_img_directory').'/'.$article->getCover())
-        );
+        if(!empty($article->getCover())){
+            $article->setCover(
+                new File($this->getParameter('article_img_directory').'/'.$article->getCover())
+            );
+        }
         $form = $this->createForm(ArticleType::class, $article);
 
         $form->handleRequest($request);
@@ -100,8 +107,9 @@ class AdminController extends Controller{
                 $cover_name = $previous_cover;
             }
 
-            $article = $this->article_service->update($article, array(
-                'cover' => $cover_name
+            $article = $article_service->update($article, array(
+                'cover' => $cover_name,
+                'tags' => $request->request->get('tags')
             ));
 
             return $this->redirectToRoute('configure_article_list_page');
@@ -117,10 +125,10 @@ class AdminController extends Controller{
      * @Route("/admin/article/delete/{id}", name="delete_article")
      */
     public function deleteArticle(
-        Article $article, 
+        Article $article,
         ArticleService $article_service
     ){
-        $this->article_service->delete($article);
+        $article_service->delete($article);
         return $this->redirectToRoute('configure_article_list_page');
     }
 

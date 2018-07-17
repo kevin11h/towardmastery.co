@@ -86,6 +86,8 @@ class Article{
       return false;
     }
 
+    // SETTER
+
     public function setDate($date){
       $this->date = $date;
       return $this;
@@ -103,6 +105,16 @@ class Article{
 
     public function addTranslation($translation){
       $this->translations->add($translation);
+      return $this;
+    }
+
+    public function addTag($tag){
+      $this->tags->add($tag);
+      return $this;
+    }
+
+    public function removeTag($tag){
+      $this->tags->removeElement($tag);
       return $this;
     }
 

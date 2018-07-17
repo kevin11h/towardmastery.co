@@ -76,6 +76,11 @@ class Tag{
       return $this;
     }
 
+    public function removeArticle($article){
+      $this->articles->removeElement($article);
+      return $this;
+    }
+
     public function toArray(){
 
       $translation_array = array();
