@@ -52,7 +52,7 @@ class TagService{
 
   public function readAll(){
     $qb = $this->em->createQueryBuilder();
-    $qb->select('a')->from(Tag::class, 'a')->distinct('a.id');
+    $qb->select('a')->from(Tag::class, 'a');
     if(func_num_args() == 1){
       $qb->setMaxResults(func_get_arg(0));
     }

@@ -5,8 +5,11 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\ArticleService;
+use App\Service\TagService;
+
 use App\Entity\Article;
 use App\Entity\ArticleTranslation;
 
@@ -16,11 +19,32 @@ class FrontController extends Controller{
      */
     public function landingPage(
         $_locale = 'en',
-        ArticleService $article_service
+        ArticleService $article_service,
+        TagService $tag_service,
+        Request $request
     ){
-        $articles = $article_service->readAll();
+        $all_articles = $article_service->readAll();
+        $tags = $tag_service->readAll();
+
+        $articles = array();
+        if(!empty($request->query->get('tag'))){
+            $slug = $request->query->get('tag');
+
+            foreach($all_articles as $article){
+                foreach($article->getTags() as $tag){
+                    if($tag->getTranslations()[0]->getSlug() == $slug){
+                        array_push($articles, $article);
+                    }
+                }
+            }
+        } else {
+            $articles = $all_articles;
+        }
+
         return $this->render('landing.html.twig', array(
-            "articles" => $articles
+            "all_articles" => $all_articles,
+            "articles" => $articles,
+            "tags" => $tags
         ));
     }
     /**

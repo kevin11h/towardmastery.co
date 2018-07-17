@@ -42,8 +42,8 @@ class Tag{
       return $this->translations;
     }
 
-    public function getTags(){
-      return $this->tags;
+    public function getArticles(){
+      return $this->articles;
     }
 
     public function getEnglish(){
