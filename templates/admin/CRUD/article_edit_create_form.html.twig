@@ -85,5 +85,15 @@
   {% endif %}
   </div>
 
+  <div class="form-group">
+    <label for="tags">Tags</label>
+    <select multiple class="form-control" name="tags">
+      <option value="tech" {%if article.id %}{%for tag in article.tags %}{%if tag.translations[0].slug=='tech'%}selected{%endif%}{%endfor%}{%endif%}>Tech</option>
+      <option value="essay" {%if article.id %}{%for tag in article.tags %}{%if tag.translations[0].slug=='essay'%}selected{%endif%}{%endfor%}{%endif%}>Essay</option>
+      <option value="justinien" {%if article.id %}{%for tag in article.tags %}{%if tag.translations[0].slug=='justinien'%}selected{%endif%}{%endfor%}{%endif%}>Justinien</option>
+      <option value="log" {%if article.id %}{%for tag in article.tags %}{%if tag.translations[0].slug=='log'%}selected{%endif%}{%endfor%}{%endif%}>Log</option>
+    </select>
+  </div>
+
 
 {{ form_end(form) }}

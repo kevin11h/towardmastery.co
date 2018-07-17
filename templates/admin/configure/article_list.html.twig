@@ -12,6 +12,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th></th>
       <th>Id</th>
       <th>Title</th>
       <th></th>
@@ -20,6 +21,13 @@
   <tbody>
     {% for article in articles %}
     <tr>
+      <td>
+          {% for tag in article.tags %}
+          <span class="badge badge-primary">
+              {{tag.translations[0].name}}
+          </span>
+          {% endfor %}
+      </td>
       <td>{{article.id}}</td>
       <td>{{article.english.title}}</td>
       <td style="float:right;">

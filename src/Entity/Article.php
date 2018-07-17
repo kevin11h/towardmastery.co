@@ -25,7 +25,7 @@ class Article{
     */
     private $status;
     /**
-    *@ORM\Column(type="string", length=255)
+    *@ORM\Column(type="string", length=255, nullable=true)
     * @Assert\Image
     */
     private $cover;
@@ -33,9 +33,14 @@ class Article{
      * @ORM\OneToMany(targetEntity="ArticleTranslation", mappedBy="article", cascade="persist")
      */
     private $translations;
+    /**
+     * @ORM\ManyToMany(targetEntity="Tag", mappedBy="articles", cascade="persist")
+     */
+    private $tags;
 
     public function __construct(){
       $this->translations = new ArrayCollection();
+      $this->tags = new ArrayCollection();
       $this->date = new \DateTime();
     }
 
@@ -57,6 +62,10 @@ class Article{
 
     public function getTranslations(){
       return $this->translations;
+    }
+
+    public function getTags(){
+      return $this->tags;
     }
 
     public function getEnglish(){
@@ -98,6 +107,30 @@ class Article{
     }
 
     public function toArray(){
+
+      $translation_array = array();
+      foreach($this->translations as $translation){
+        array_push($translation_array, $translation->toArray());
+      }
+
+      $tags = array();
+      foreach($this->tags as $tag){
+        array_push($tags, $tag->toArray());
+      }
+
+      $array = array(
+        'id' => $this->id,
+        'date' => $this->date,
+        'status' => $this->status,
+        'cover' => $this->cover,
+        'translations' => $translation_array,
+        'tags' => $tags
+      );
+
+      return $array;
+    }
+
+    public function toArrayWithoutTags(){
 
       $translation_array = array();
       foreach($this->translations as $translation){
