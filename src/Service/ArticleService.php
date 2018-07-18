@@ -182,7 +182,7 @@ class ArticleService{
         // die;
         $articles = $qb->getQuery()->getResult();
     } else{
-      $articles = null;
+      $articles = $this->readAll();
     }
     // dump($qb);
     // die;
