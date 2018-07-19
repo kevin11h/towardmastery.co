@@ -1,0 +1,249 @@
+<!-- <h1>Cornell notes : Natural Language Processing with Python - Chapter 1</h1> -->
+<p>Source : <a href="http://www.nltk.org/book/" target="_blank" class="font-italic">Natural Language Processing with Python – Analyzing Text with the Natural Language Toolkit</a> by Steven Bird, Ewan Klein, and Edward Loper</p>
+
+<table>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+    </tr>
+    <tr>
+        <td>What is a concordance view ?</td>
+        <td>
+        A concordance view shows us every occurrence of a given word, together with some context, takes a few extra seconds to build an index.<br>
+        A concordance permits us to see words in context.<br>
+        <pre>text1.concordance("monstrous")</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get words appearing in a similar range of contexts</td>
+        <td>
+        <pre>text1.similar("monstrous")</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Examine just the contexts that are shared</td>
+        <td>
+        <pre>text2.common_contexts(["monstrous", "very"])</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Generate a dispersion plot</td>
+        <td>
+            To determine the location of a word in the text.<br>
+            Each stripe represents an instance of a word.<br>
+            <pre>text4.dispersion_plot(["citizens", "democracy", "freedom", "duties", "America"])</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>>What is a token ?</td>
+        <td>
+            A sequence of characters (word or punctuation symbol).
+        </td>
+    </tr>
+    <tr>
+        <td>Get the number of tokens</td>
+        <td>
+        <pre>len(text3)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a set ?</td>
+        <td>
+            The vocabulary of a text is a set of tokens
+            <pre>set(text3)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Sort an array in Python</td>
+        <td>
+            <pre>sorted(array)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a word type ?</td>
+        <td>
+            A word considered as a unique item of vocabulary.
+        </td>
+    </tr>
+    <tr>
+        <td>Count occurrences in Python</td>
+        <td>
+            <pre>text4.count('a')</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Create a list in Python</td>
+        <td>
+            <pre>[‘’, ‘’ etc.]</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Concatenate lists in Python</td>
+        <td>
+            <pre>[ ] + [ ]</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Append to list in Python</td>
+        <td>
+            <pre>list.append(‘’)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Access a list index in Python</td>
+        <td>
+            <pre>text.index(value)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Access a list value in Python</td>
+        <td>
+            <pre>text[index]</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Slicing in Python</td>
+        <td>
+            <pre>text[index1:index2] ; text[index1:] ; text[:index2]</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>string vs list ?</td>
+        <td>
+            strings are a list of characters
+        </td>
+    </tr>
+    <tr>
+        <td>Convert a list to a string in Python</td>
+        <td>
+            <pre>‘’.join(list)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Convert a string to a list in Python</td>
+        <td>
+            <pre>string.split()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get a text frequency distribution</td>
+        <td>
+            <pre>FreqDist(text)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the most frequent tokens</td>
+        <td>
+            <pre>fdist.most_common(number of tokens to get)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Generate a cumulative frequency plot</td>
+        <td>
+            <pre>fdist1.plot(50, cumulative=True)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is an hapaxe ?</td>
+        <td>
+            Word that occurs only once.
+        </td>
+    </tr>
+    <tr>
+        <td>Fine-grained word selection</td>
+        <td>
+            <pre>w for w in set(text5) if len(w) > 7 and fdist5[w] > 7</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a collocation ?</td>
+        <td>
+            A sequence of words that occurs together unusually often, they are resistant to substitution with words that have similar senses.
+            <pre>text4.collocations()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a bigram ?</td>
+        <td>
+            A word pair.
+            <pre>list(bigrams(['more', 'is', 'said', 'than', 'done']))</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the max value</td>
+        <td>
+            <pre>fdist.max()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get a given frequency in a frequency distribution</td>
+        <td>
+            <pre>fdist.freq(3)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>if statement in Python</td>
+        <td>
+            <pre>
+            if len(word) < 5:
+            ...    print('word length is less than 5')
+            elif token.istitle():
+            ...     print(token, 'is a titlecase word')
+            else:
+            ...     print(token, 'is punctuation')
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>for statement in Python</td>
+        <td>
+            <pre>
+            for word in ['Call', 'me', 'Ishmael', '.']:
+            ...    print(word)
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a word sense disambiguation ?</td>
+        <td>
+            To assess which sense of a word was intended in a given context.
+        </td>
+    </tr>
+    <tr>
+        <td>What is  a Pronoun Resolution ?</td>
+        <td>
+            To detect the subjects and objects of verbs : found the antecedents.
+        </td>
+    </tr>
+    <tr>
+        <td>What is an anaphora resolution ?</td>
+        <td>
+            Identifying what a pronoun or noun phrase refers to.
+        </td>
+    </tr>
+    <tr>
+        <td>What is a semantic role labeling ?</td>
+        <td>
+            Identifying how a noun phrase relates to the verb.
+        </td>
+    </tr>
+    <tr>
+        <td>What is text alignment ?</td>
+        <td>
+            Automatically pair up the sentences : Once we have a million or more sentence pairs, we can detect corresponding words and phrases, and build a model that can be used for translating new text.
+        </td>
+    </tr>
+    <tr>
+        <td>What is a Spoken Dialogue System ?</td>
+        <td>
+            A pipeline of language understanding components.
+            <img src="/uploads/article/spoken_dialogue_system.jpg">
+        </td>
+    </tr>
+    <tr>
+        <td>What does RTE mean ?</td>
+        <td>
+            Recognizing Textual Entailment
+        </td>
+    </tr>
+</table>
