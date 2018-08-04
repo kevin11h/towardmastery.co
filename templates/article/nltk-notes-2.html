@@ -1,0 +1,407 @@
+<!-- <h1>Cornell notes : Natural Language Processing with Python - Chapter 2</h1> -->
+<p>Source : <a href="http://www.nltk.org/book/" target="_blank" class="font-italic">Natural Language Processing with Python – Analyzing Text with the Natural Language Toolkit</a> by Steven Bird, Ewan Klein, and Edward Loper</p>
+
+<table class="table">
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+    </tr>
+    <tr>
+        <td>What is a corpora ?</td>
+        <td>large bodies of linguistic data, large structure collection of texts
+        </td>
+    </tr>
+    <tr>
+        <td>Get the list of texts from a corpus</td>
+        <td>
+        <pre>corpus.fileids()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Access a default corpus in nltk</td>
+        <td>
+        <pre>
+        from nltk.corpus import gutenberg
+        nltk.corpus.gutenberg.words('austen-emma.txt')
+        </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the raw content of the file</td>
+        <td>
+        <pre>gutenberg.raw(fileid)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Divide the text into its sentences</td>
+        <td>
+        <pre>gutenberg.sents('shakespeare-macbeth.txt')</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Access the default web texts in nltk</td>
+        <td>
+        <pre>from nltk.corpus import webtext</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Access default chat conversations in nltk</td>
+        <td>
+        <pre>
+        from nltk.corpus import nps_chat
+        chatroom = nps_chat.posts('10-19-20s_706posts.xml')
+        </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What are stylistics ?</td>
+        <td>
+        studying systematic differences between genres, word counts might distinguish genres : the most frequent modal in the news genre is "will", while the most frequent modal in the romance genre is "could"
+        </td>
+    </tr>
+    <tr>
+        <td>Brown corpus</td>
+        <td>a convenient resource for studying systematic differences between genres
+        <br>
+        <pre>from nltk.corpus import brown</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Reuters Corpus</td>
+        <td>for training and testing algorithms that automatically detect the topic of a document, categories in the Reuters corpus overlap with each other
+        <br>
+        <pre>from nltk.corpus import reuters</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Inaugural Address Corpus</td>
+        <td>temporal corpus : represent language use over time
+        <br>
+        <pre>from nltk.corpus import inaugural</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the list of NLTK corpus</td>
+        <td>http://nltk.org/data</td>
+    </tr>
+    <tr>
+        <td>Universal Declaration of Human Rights</td>
+        <td>
+        available in over 300 languages
+        <br>
+        <pre>from nltk.corpus import udhr</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the categories of the corpus</td>
+        <td>
+        <pre>corpus.categories()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the words of the whole corpus</td>
+        <td>
+        <pre>corpus.words()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Loading your own Corpus</td>
+        <td>
+        <pre>
+        from nltk.corpus import PlaintextCorpusReader
+        corpus_root = '/usr/share/dict'
+        wordlists = PlaintextCorpusReader(corpus_root, '.*')
+
+        // OR
+
+        from nltk.corpus import BracketParseCorpusReader
+        corpus_root = r"C:\corpora\penntreebank\parsed\mrg\wsj"
+        file_pattern = r".*/wsj_.*\.mrg"
+        ptb = BracketParseCorpusReader(corpus_root, file_pattern)
+        </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a conditional frequency distribution ?</td>
+        <td>A collection of frequency distributions, each one for a different "condition". A conditional frequency distribution needs to pair each event with a condition.
+        <br>
+        <pre>
+        pairs = [('news', 'The'), ('news', 'Fulton'), ('news', 'County'), ...]
+        cfd = nltk.ConditionalFreqDist(
+        ...     (genre, word)
+        ...     for genre in brown.categories()
+        ...     for word in brown.words(categories=genre))
+        </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Build a table out of conditional frequency distributions</td>
+        <td>
+        <br>
+        <pre>
+        cfd.tabulate(conditions=['English', 'German_Deutsch'],
+        ...     samples=range(10), cumulative=True)</pre>
+        </td>
+    </tr>
+
+    <tr>
+        <td>What is a bigram ?</td>
+        <td>word pair</td>
+    </tr>
+    <tr>
+        <td>Build a list of consecutive word pairs</td>
+        <td>
+        <pre>list(nltk.bigrams(words))</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Generate random text</td>
+        <td>
+        <pre>
+        def generate_model(cfdist, word, num=15):
+            for i in range(num):
+                print(word, end=' ')
+                word = cfdist[word].max() // most likely word to follow the word variable
+
+        text = nltk.corpus.genesis.words('english-kjv.txt')
+        bigrams = nltk.bigrams(text)
+        cfd = nltk.ConditionalFreqDist(bigrams)
+        generate_model(cfd, ‘&lt;initial word&gt;')
+        </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Create a conditional frequency distribution from a list of pairs</td>
+        <td>
+        <pre>cfdist = ConditionalFreqDist(pairs)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the conditions from the CFD</td>
+        <td>
+        <pre>cfdist.conditions()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the frequency distribution for a given condition</td>
+        <td>
+        <pre>cfdist[condition]</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the frequency for the given sample for this condition</td>
+        <td>
+        <pre>cfdist[condition][sample]</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the tabulation limited to the specified samples and conditions</td>
+        <td>
+        <pre>cfdist.tabulate(samples, conditions)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Generate a graphical plot of the conditional frequency distribution limited to the specified samples and conditions</td>
+        <td>
+        <pre>cfdist.plot(samples, conditions)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Check if samples in cfdist1 occur less frequently than in cfdist2</td>
+        <td>
+        <pre>cfdist1 < cfdist2</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a lexicon ?</td>
+        <td>a lexical resource, a collection of words and/or phrases along with associated information such as part of speech (lexical category) and sense definitions (gloss)</td>
+    </tr>
+    <tr>
+        <td>What is a lexical entry ?</td>
+        <td>a headword (also known as a lemma) along with additional information such as the part of speech and the sense definition</td>
+    </tr>
+    <tr>
+        <td>What are homonyms ?</td>
+        <td>Two distinct words having the same spelling</td>
+    </tr>
+    <tr>
+        <td>The Words Corpus</td>
+        <td>Use it to find unusual or mis-spelt words in a text corpus
+        <br>
+        <pre>nltk.corpus.words.words()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Stopwords</td>
+        <td>corpus of high-frequency words
+        <br>
+        <pre>from nltk.corpus import stopwords</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Names corpus</td>
+        <td>corpus of 8,000 first names categorized by gender
+        <br>
+        <pre>names = nltk.corpus.names</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a phone ?</td>
+        <td>contrastive sound
+            <br>
+            <pre></pre>
+        </td>
+    </tr>
+    <tr>
+        <td>CMU Pronouncing Dictionary</td>
+        <td>list of phones in english
+        <br>
+        <pre>entries = nltk.corpus.cmudict.entries()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Swadesh wordlists</td>
+        <td>comparative wordlist : 200 common words in several languages
+        <br>
+        <pre>from nltk.corpus import swadesh</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Toolbox</td>
+        <td>also called Shoebox, a collection of entries, where each entry is made up of one or more fields
+        <br>
+        <pre>from nltk.corpus import toolbox</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>WordNet</td>
+        <td>a semantically-oriented dictionary of English
+        <br>
+        <pre>from nltk.corpus import wordnet as wn</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a synset ?</td>
+        <td>synonym set, a collection of synonymous words (or "lemmas")
+        <br>
+        <pre>wn.synsets('motorcar')</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get a list of synonyms for a given word</td>
+        <td>
+        <br>
+        <pre>wn.synsets('motorcar').lemma_names()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get a synset's verbose definition</td>
+        <td>
+        <br>
+        <pre>synset.definition()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get a synset's example sentences</td>
+        <td>
+        <br>
+        <pre>synset.examples()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a lemma ?</td>
+        <td>pairing of a synset with a word</td>
+    </tr>
+    <tr>
+        <td>Get all lemmas for a given word</td>
+        <td>
+        <pre>text.lemmas(word)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What are root synsets ?</td>
+        <td>unique beginners, very general concepts
+        </td>
+    </tr>
+    <tr>
+        <td>What is a hyponym ?</td>
+        <td>more specific concepts hierarchically
+        <br>
+        <pre>synset.hyponyms()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is a hypernym ?</td>
+        <td>up in the hierarchy
+        <br>
+        <pre>
+        synset.hypernyms()
+        synset.root_hypernyms() //the most general hypernyms
+        </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What are lexical relations ?</td>
+        <td>hypernyms and hyponyms, because they relate one synset to another
+        </td>
+    </tr>
+    <tr>
+        <td>What are meronyms ?</td>
+        <td>components of an item
+        <br>
+        <pre>
+        synset.part_meronyms() // tree => trunk, limb etc.
+        synset.substance_meronyms() //heartwood, sapwood
+        </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What are holonyms ?</td>
+        <td>items of a component (things they are contained in)
+        <br>
+        <pre>synset.member_holonyms() // tree => forest</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is an entailment ?</td>
+        <td>relationship between verb : walking entails stepping
+        <br>
+        <pre>synset.entailments()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the antonyms of a synset</td>
+        <td>
+        <br>
+        <pre>synset.antonyms()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the lexical relations of a synset</td>
+        <td>
+        <br>
+        <pre>dir(synset)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>What is semantic similarity ?</td>
+        <td>If two synsets share a very specific hypernym they must be closely related
+        <br>
+        <pre>synset1.lowest_common_hypernyms(synset2)</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Get the hierarchical depth of a synset</td>
+        <td>
+        <br>
+        <pre>synset.min_depth()</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>How to calculate a semantic similarity score ?</td>
+        <td>
+        <br>
+        <pre>synset1.path_similarity(synset2) // -1 if no path, 1 if identical</pre>
+        </td>
+    </tr>
+</table>
