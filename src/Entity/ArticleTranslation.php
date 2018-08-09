@@ -91,6 +91,7 @@ class ArticleTranslation{
     $array = array(
       'id' => $this->id,
       'title' => $this->title,
+      'slug' => $this->slug,
       'content' => $this->content,
       'language' => $this->language
     );
