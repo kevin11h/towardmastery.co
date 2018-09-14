@@ -19,6 +19,11 @@
     {% set article_content = current_article.content|striptags %}
     <meta name="description" content="{{ article_content|length > 50 ? article_content|slice(0, 50) ~ '...' : article_content }}" />
     <meta property="og:image" content="http://towardmastery.co{{asset(article_img_directory ~ article.cover)}}">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@basilesamel" />
+    <meta name="twitter:title" content="Toward Mastery" />
+    <meta name="twitter:description" content="{{ article_content|length > 50 ? article_content|slice(0, 50) ~ '...' : article_content }}" />
     <meta name="twitter:image" content="http://towardmastery.co{{asset(article_img_directory ~ article.cover)}}">
 
 {% endblock %}
