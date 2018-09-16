@@ -19,15 +19,17 @@ class ArticleController extends Controller{
     ){
         $response = new Response();
         try{
-            $articles = $article_service->readAll();
+            $articles = $article_service->search(array(
+                'tag' => $request->query->get('tag')
+            ));
             $array = array();
             foreach($articles as $article){
                 array_push($array, $article->toArray());
             }
             $json = json_encode($array);
-            return new Response($json);
+            return new Response($json, 200);
         } catch(\Exception $e){
-            return $response->setStatusCode('404');
+            return new Response($e->getMessage(), 500);
         }
     }
 }
