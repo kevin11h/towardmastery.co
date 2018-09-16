@@ -1,0 +1,155 @@
+.col-12{
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    font-size: 25px;
+
+}
+article{
+    ul, ol{
+        padding-left: 10px;
+    }
+
+    p, ul, h2, h3, h4, pre, ol, table, .table{
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    p, ul li, ol li{
+        font-size: 14px;
+    }
+
+    img{
+        max-width: 90%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    h5{
+        text-align: center;
+    }
+
+    figure{
+        margin-top: 50px;
+        margin-bottom: 50px;
+
+        figcaption{
+            font-style: italic;
+        }
+    }
+
+    h2{
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    pre{
+        white-space: pre-wrap;       /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    }
+}
+
+#article-cover{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 320px;
+    height: 160px;
+}
+
+
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {
+/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr {
+		display: block;
+	}
+
+    th{
+        display: none;
+    }
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	tr { border: 1px solid #ccc; }
+
+	td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+	}
+
+	td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+	}
+}
+
+@media (min-width: 576px) {
+    #article-cover{
+        width: 576px;
+        height: 288px;
+    }
+}
+
+@media (min-width: 768px) {
+
+    h1{
+        font-weight: 700;
+    }
+
+    #article-cover{
+        width: 768px;
+        height: 384px;
+    }
+
+    table {
+      max-width: 700px;
+      border-collapse: collapse;
+    }
+    /* Zebra striping */
+    tr:nth-of-type(odd) {
+      background: #eee;
+    }
+    th {
+      background: #333;
+      color: white;
+      font-weight: bold;
+    }
+    td, th {
+      padding: 6px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    article{
+        p, ul li, ol li{
+            font-size: 18px;
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    #article-cover{
+        width: 992px;
+        height: 496px;
+    }
+}

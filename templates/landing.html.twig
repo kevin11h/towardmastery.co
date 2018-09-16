@@ -1,112 +1,89 @@
 {% extends 'base.html.twig' %}
 
-{% trans_default_domain 'messages' %}
-{% set lang = app.request.locale %}
-{% set other_lang = (lang == 'en' ? 'fr' : 'en') %}
+{% block title %}Toward Mastery{% endblock %}
 
-{%block body%}
+{% block meta %}
+
+    {% if app.environment == 'dev' %}
+        {% set domain = 'http://localhost:8000' %}
+    {% else %}
+        {% set domain = 'https://towardmastery.co' %}
+    {% endif %}
+
+    <meta name="description" content="" />
+    <meta property="og:image" content="{{domain}}">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@basilesamel" />
+    <meta name="twitter:title" content="Toward Mastery" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:image" content="{{domain}}">
+
+{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset("build/landing.css") }}">
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ asset('build/landing.js') }}"></script>
+{% endblock %}
+
+
+{% block body %}
 
 {% include 'nav.html.twig' %}
 
-<main class="container-fluid">
+<div class="container-fluid">
 
-<div class="row">
-
-<div class="d-none d-md-flex flex-column col-md-2 text-center align-items-center justify-content-center" id="sidebar">
-
-    <div class="text-left mb-3">
-        <div class="mb-3">
-            <a href="/">
-            <span class="badge badge-{% if not app.request.get('tag') %}danger{% else %}dark{% endif %}">
-                All <span class="badge badge-light">{{all_articles|length}}</span>
-            </span>
-            </a>
-        </div>
-        {% for tag in tags %}
-        <div>
-            <a href="/?tag={{tag.translations[0].slug}}">
-            <span class="badge badge-{% if app.request.get('tag') == tag.translations[0].slug %}danger{% else %}dark{% endif %}">
-                {{tag.translations[0].name}} <span class="badge badge-light">{{tag.articles|length}}</span>
-            </span>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
-
-    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-newsletter-subscription">
-      {{'Subscribe'|trans}} <i class="fas fa-envelope-open text-white"></i>
-    </button>
-
-    <ul class="nav flex-row mb-3">
-        <li class="nav-item">
-            <a class="nav-link text-dark" href="mailto:basile@justinien.co" target="_blank"><span class="fa fa-envelope"></span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" href="https://www.linkedin.com/in/basile-samel/" target="_blank"><span class="fab fa-linkedin"></span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" href="https://twitter.com/basilesamel" target="_blank"><span class="fab fa-twitter"></span></a>
-        </li>
-    </ul>
-
-    <p class="text-muted">2018Ⓒ <a href="http://basilesamel.com/{{lang}}" target="_blank">basile 🌿</a></p>
-
-</div>
-
-<!-- Article feed -->
-<div class="col-12 col-md-10 ml-auto mb-5" id="articles">
-{% if articles is not empty %}
-
-    {% for article in articles %}
-
-        {% if article.status == 'public' %}
-
-        {% if lang == 'en'%}
-            {% set current_article = article.english %}
-            {% set date_article = article.date|localizeddate('none', 'none', null, null, "MMM d") %}
-        {% else %}
-            {% set current_article = article.french %}
-            {% set date_article = article.date|localizeddate('none', 'none', null, null, "d MMM") %}
-        {% endif %}
-
-        {% if current_article %}
-        <a href="/{{lang}}/article/{{current_article.slug}}" style="background-image:url({{asset(article_img_directory ~ article.cover)}});" class="article-wrapper">
-        <article class="jumbotron jumbotron-fluid d-flex align-items-center">
-          <div class="container text-center">
-            <h3 class="display-4">{{current_article.title}}</h3>
-            <span class="text-white">{{date_article}}</span>
-            <div class="mt-3">
-                {% for tag in article.tags %}
-                <span class="badge badge-dark">
-                    {{tag.translations[0].name}}
-                </span>
-                {% endfor %}
-            </div>
-          </div>
-        </article>
+<header class="row justify-content-center mb-3 pb-3">
+<div class="col-12 text-center">
+    <ul class="tags px-3 mx-auto">
+        <a href="/">
+        <span class="badge badge-{% if not app.request.get('tag') %}danger{% else %}dark{% endif %}">
+            All {{article_count}}
+        </span>
         </a>
-        {% endif %}
+        {% for tag in tags %}
+        <a href="/?tag={{tag.translations[0].slug}}" class="ml-2">
+        <span class="badge badge-{% if app.request.get('tag') == tag.translations[0].slug %}danger{% else %}dark{% endif %}">
+            {{tag.translations[0].name}} {{tag.articles|length}}
+        </span>
+        </a>
+        {% endfor %}
+    </ul>
+</div>
+</header>
 
-        {% endif %}
-
+<div class="row justify-content-center">
+<div class="col-12">
+{% if articles|length > 0 %}
+    {% for article in articles %}
+        {% set current_article = article.translations[0] %}
+        <div class="card mb-3 mx-auto" style="background: url('/uploads/article/{{article.cover}}') center center no-repeat; background-size: cover;">
+        <div class="card-body d-flex flex-row align-items-center justify-content-center">
+            <div class="text-center">
+                <a href="/en/article/{{current_article.slug}}">
+                <small class="text-white">{{article.date|date('d/m/Y')}}</small>
+                <h3>{{current_article.title}}</h3>
+                <div>
+                    {% for tag in article.tags %}
+                    <span class="badge badge-dark">
+                        {{tag.translations[0].name}}
+                    </span>
+                    {% endfor %}
+                </div>
+                </a>
+            </div>
+        </div>
+        </div>
     {% endfor %}
-
-    <p class="text-center display-4 text-muted mt-5 mb-5">{{ 'That\'s all for now'|trans|raw }} <a href="#"><i class="fas fa-chevron-circle-up text-muted"></i></a></p>
-
 {% else %}
-  <p class="text-center display-4 text-muted">{{ 'article-noarticles'|trans|raw }}</p>
+<p class="text-center display-4 text-muted">no articles to display</p>
 {% endif %}
-
+</div>
+</div>
 </div>
 
-</div>
-</main>
-
-
-{% include 'modal_email_subscription.html.twig' %}
-
-{%endblock%}
-
-{%block javascript%}
-<script src="{{ asset('build/landing.js') }}"></script>
-{%endblock%}
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% set current_article = article.translations[0] %}
+
+{% block title %}{{current_article.title}} | Toward Mastery{% endblock %}
+
+{% block meta %}
+
+    {% if app.environment == 'dev' %}
+        {% set domain = 'http://localhost:8000' %}
+    {% else %}
+        {% set domain = 'https://towardmastery.co' %}
+    {% endif %}
+
+    {% set article_content = current_article.content|striptags %}
+    <meta name="description" content="{{ article_content|length > 50 ? article_content|slice(0, 50) ~ '...' : article_content }}" />
+    <meta property="og:image" content="{{domain}}{{asset(article.cover)}}">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@basilesamel" />
+    <meta name="twitter:title" content="Toward Mastery" />
+    <meta name="twitter:description" content="{{ article_content|length > 50 ? article_content|slice(0, 50) ~ '...' : article_content }}" />
+    <meta name="twitter:image" content="{{domain}}{{asset(article.cover)}}">
+
+{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset("build/article_view.css") }}">
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ asset('build/article_view.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+
+{% include 'nav.html.twig' %}
+
+<main class="container-fluid">
+
+<div class="row">
+
+<!-- Article feed -->
+<div class="col-12 col-md-6 mx-auto">
+
+    <img src="/uploads/article/{{article.cover}}" id="article-cover" class="px-0"/>
+
+    <article class="article px-3 px-md-0">
+
+      <h1 class="text-center my-3 my-md-5">{{current_article.title}}</h1>
+
+
+      <p class="article-metadata text-center"><small>{{article.date|date('d/m/Y')}}, {{'by'|trans}} <a href="http://basilesamel.com" target='_blank'>Basile Samel</a> </small></p>
+      <div class="article-content">{{current_article.content | raw}}</div>
+      <hr>
+      <div class="font-weight-bold">
+          <p>I am <a href="http://basilesamel.com" target="_blank">Basile</a>, a young software craftsman documenting his entrepreneurship journey. If you liked this article, you can follow my adventures in real time on <a href="https://twitter.com/basilesamel" target="_blank">Twitter</a>. I’m always looking forward to meeting new people and learning from others !</p>
+          <p>My personal website : <a href="https://basilesamel.com" target="_blank">basilesamel.com</a></p>
+      </div>
+
+    </article>
+
+</div>
+
+</div>
+
+</main>
+
+{%endblock%}

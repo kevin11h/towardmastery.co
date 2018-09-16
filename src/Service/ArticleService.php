@@ -156,36 +156,15 @@ class ArticleService{
     return $articles;
   }
 
-  public function search($filters, $orderby, $paging){
+  public function search($args){
     $qb = $this->em->createQueryBuilder();
-    $articles;
-    if(!empty($filters)){
-        $qb->select('a')->from(Article::class, 'a');
-        $filtering = array();
-        foreach($filters as $filter){
-            $type = strtolower($filter['criteria']);
-            $type = preg_replace('/\s+/', '', $type);
-            array_push($filtering, $qb->expr()->eq('a.' . $type, $qb->expr()->literal($filter['filter'])));
-        }
-        $qb->where($qb->expr()->orX(...$filtering));
-        if(!empty($orderby)){
-          $type = strtolower($orderby['criteria']);
-          $type = preg_replace('/\s+/', '', $type);
-          $qb->orderBy('a.' . $type, $orderby['direction']);
-        }
-        if(!empty($paging)){
-          $offset = ($paging['current_page']-1) * $paging['result_per_page'];
-          $limit = $paging['result_per_page'];
-          $qb->setFirstResult($offset)->setMaxResults($limit);
-        }
-        // dump($qb->getQuery());
-        // die;
-        $articles = $qb->getQuery()->getResult();
-    } else{
-      $articles = $this->readAll();
+    $qb->select('a')->from(Article::class, 'a');
+    if(!empty($args['tag'])){
+        $qb->join('a.tags', 'at')->join('at.translations', 'att');
+        $qb->where('att.slug = :slug')->setParameter('slug', $args['tag']);
     }
-    // dump($qb);
-    // die;
+    $qb->orderby('a.date', 'DESC');
+    $articles = $qb->getQuery()->getResult();
     return $articles;
   }
 

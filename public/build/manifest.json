@@ -1,0 +1,10 @@
+{
+  "build/admin.css": "/build/admin.css",
+  "build/admin.js": "/build/admin.js",
+  "build/article_view.css": "/build/article_view.css",
+  "build/article_view.js": "/build/article_view.js",
+  "build/core.css": "/build/core.css",
+  "build/core.js": "/build/core.js",
+  "build/landing.css": "/build/landing.css",
+  "build/landing.js": "/build/landing.js"
+}

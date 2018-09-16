@@ -1,32 +1,10 @@
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand logo-wrapper" href="/{{ app.request.locale }}">
-      <span class="logo">Toward Mastery</span>
-      <img src="{{asset('img/logo.svg')}}"/>
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
-    <span class="navbar-text mr-auto">
-        {{ 'about-presentation'|trans|raw }}
-    </span>
-    <ul class="navbar-nav ml-auto">
-        <!-- {% include 'nav_flag_link.html.twig' %} -->
-        <li class="nav-item d-block d-md-none mt-3">
-            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-email-subscription">
-                {{'Subscribe'|trans}} <i class="fas fa-envelope-open text-white"></i>
-            </button>
-        </li>
-        <li class="nav-item d-block d-md-none mt-3">
-            <a class="nav-link mr-3" href="mailto:basile@justinien.co" target="_blank"><span class="fa fa-envelope"></span></a>
-            <a class="nav-link mr-3" href="https://www.linkedin.com/in/basile-samel/" target="_blank"><span class="fab fa-linkedin"></span></a>
-            <a class="nav-link" href="https://twitter.com/basilesamel" target="_blank"><span class="fab fa-twitter"></span></a>
-        </li>
-        <li class="nav-item d-block d-md-none mt-3">
-            <p class="text-muted">2018Ⓒ <a href="http://basilesamel.com/{{lang}}" target="_blank">Basile Samel</a></p>
-        </li>
+<nav class="d-flex flex-column justify-content-center fixed-top">
+    <ul class="nav d-flex flex-row justify-content-center align-items-center">
+      <li class="nav-item">
+        <a class="nav-link logo" href="/">Toward Mastery</a>
+      </li>
+      <li class="nav-item d-none d-md-block">
+        <small><a href="https://basilesamel.com" target="_blank">a software craftsman</a>'s blog</small>
+      </li>
     </ul>
-  </div>
 </nav>

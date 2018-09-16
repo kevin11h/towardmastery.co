@@ -1,0 +1,27 @@
+nav{
+    padding: 0;
+
+    .logo{
+        font-size: 20px;
+        color: #212227;
+    }
+    background-color: white;
+    // padding-bottom: 10px;
+
+    small a{
+        text-decoration: underline;
+        color: black;
+    }
+
+    small a:hover{
+        color: black;
+    }
+}
+
+@media (min-width: 768px) {
+    nav{
+        .logo{
+            font-size: 20px;
+        }
+    }
+}

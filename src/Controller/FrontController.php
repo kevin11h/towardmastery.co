@@ -15,43 +15,30 @@ use App\Entity\ArticleTranslation;
 
 class FrontController extends Controller{
     /**
-     * @Route("/{_locale}", name="landing_page", requirements = {"_locale": "en|fr"})
+     * @Route("/", name="landing_page", methods={"GET"})
      */
     public function landingPage(
-        $_locale = 'en',
         ArticleService $article_service,
         TagService $tag_service,
         Request $request
     ){
-        $all_articles = $article_service->readAll();
+        $article_count = count($article_service->readAll());
+        $articles = $article_service->search(array(
+            'tag' => $request->query->get('tag')
+        ));
         $tags = $tag_service->readAll();
 
-        $articles = array();
-        if(!empty($request->query->get('tag'))){
-            $slug = $request->query->get('tag');
-
-            foreach($all_articles as $article){
-                foreach($article->getTags() as $tag){
-                    if($tag->getTranslations()[0]->getSlug() == $slug){
-                        array_push($articles, $article);
-                    }
-                }
-            }
-        } else {
-            $articles = $all_articles;
-        }
-
         return $this->render('landing.html.twig', array(
-            "all_articles" => $all_articles,
             "articles" => $articles,
-            "tags" => $tags
+            "tags" => $tags,
+            'article_count' => $article_count
         ));
     }
     /**
      * @Route("/{_locale}/article/{slug}", name="article_view_page")
      */
     public function articleAction(ArticleTranslation $article){
-        return $this->render('view_article_page.html.twig', array(
+        return $this->render('article_view_page.html.twig', array(
             "article" => $article->getArticle()
         ));
     }

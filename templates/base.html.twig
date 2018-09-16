@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang='{{app.request.locale}}'>
+<html lang='en'>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,19 +7,18 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Expires" content="-1">
 
-    <link rel="icon" href="{{ asset('img/favicon_64.png') }}">
+    <link rel="icon" href="">
 
-    <title>{% block title %}Toward Mastery{% endblock %}</title>
-    {%block stylesheet%}<link rel="stylesheet" href="{{ asset("build/landing.css") }}">{%endblock%}
-    <link href="https://fonts.googleapis.com/css?family=Suez+One" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=IM+Fell+English" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Averia+Serif+Libre" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    <title>{% block title %}{% endblock %}</title>
 
-    {% block meta_description %}<meta name="description" content="{{ 'about-presentation'|trans|raw }}" />{% endblock %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+    {% block meta %}{% endblock %}
 
     <meta name="author" content="Basile Samel">
+
+    <link rel="stylesheet" href="{{ asset("build/core.css") }}">
+    {% block stylesheet %}{% endblock %}
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     {% if app.environment == 'prod'%}
@@ -36,10 +35,10 @@
 </head>
 <body>
 
-  {%block body%} {%endblock%}
+  {% block body %} {% endblock %}
 
-
-  {%block javascript%} {%endblock%}
+  <script src="{{ asset("build/core.js") }}"></script>
+  {% block javascript %} {% endblock %}
   <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 </body>
 </html>
